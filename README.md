@@ -94,7 +94,21 @@ This is an example of how to list things you need to use the software and how to
 <!-- Project documentation -->
 ## Project documentation
 
-Requirement documentation and architecture designs can go here
+Meet the Team!
+
+https://utoronto-my.sharepoint.com/:w:/g/personal/nishbijal_patel_mail_utoronto_ca/ERyEZ4swgSBHgNdTQyn37EMB87m14NS0bo2QkSrDvZln5A?e=KOigzT
+
+High Level Static Overview
+
+![245086678_193418209583481_6811035178691024923_n](https://user-images.githubusercontent.com/59542984/136675377-dcdd9579-64d3-43df-8dcf-c3e86fe040d9.jpg)
+
+Class Relation Static Overview 
+
+![245129537_4474425535979000_1053347933911491135_n](https://user-images.githubusercontent.com/59542984/136675359-1bf9fbad-b834-436f-9951-ef252a4e944b.jpg)
+
+Dynamic View
+
+![245246671_393601682372830_4368037107910076164_n](https://user-images.githubusercontent.com/59542984/136675373-28271897-3c0f-42a6-b7cf-0c971c4e8dab.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -102,8 +116,16 @@ Requirement documentation and architecture designs can go here
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Nish Patel: nishbijal.patel@mail.utoronto.ca
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Toby Kurniawan: toby.kurniawan@mail.utoronto.ca 
+
+Omar Elzaria: omar.elzaria@mail.utoronto.ca
+
+Pranav Agnihotri: pranav.agnihotri@mail.utoronto.ca 
+
+Chenyang Wang: chenyan.wang@mail.utoronto.ca 
+
+Project Link: https://github.com/ECE444-2021Fall/project1-education-pathways-group-7-apollo
 
 <p align="right">(<a href="#top">back to top</a>)</p>
