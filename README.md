@@ -23,8 +23,6 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -36,7 +34,6 @@ features.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
 ### Built With
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
@@ -47,49 +44,41 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [MongoDB](https://www.mongodb.com/)
 * [VSCode](https://code.visualstudio.com/)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+Asana for Project Management:
+https://app.asana.com/0/portfolio/1201149350874477/list 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!--Team Standards -->
 ## Team standards (coding standards, test requirements, etc.)
 
+**Tracking and Managing Work**
+
+The team will use an agile development methodology, using the Asana software to keep track of our tasks along the software development process 
+
+The team will use the SCRUM framework with bi-weekly sprints, stand up sessions and team meetings to discuss deliverables. SCRUM will be led by the Project Manager. 
+
+**Production Changes** 
+
+Changes must be made in any non-master branches 
+
+Unit tests must be created and passed whenever applicable, especially for code changes 
+
+Pull requests and merges to the master branch must be reviewed by at least two other team members 
+
+Detailed explanations for pull requests to explain any complex code 
+
+**Code Reviews**
+
+Everyone should have an equal share for reviewing code 
+
+Any member who approves a Pull Request is equally liable for the code as the original Pull Request creator 
+
+Perform any code reviews first before picking up a new task  
+
+Pull Requests must receive a minimum of two approvals before being merged 
+ 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- Project documentation -->
 ## Project documentation
@@ -111,7 +100,6 @@ Dynamic View
 ![245246671_393601682372830_4368037107910076164_n](https://user-images.githubusercontent.com/59542984/136675373-28271897-3c0f-42a6-b7cf-0c971c4e8dab.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 <!-- CONTACT -->
 ## Contact
