@@ -16,7 +16,7 @@ features.
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * [React.js](https://reactjs.org/)
-* [Bootstrap](https://getbootstrap.com)
+* [Material UI] (https://mui.com/)
 * [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 * [MongoDB](https://www.mongodb.com/)
 * [VSCode](https://code.visualstudio.com/)
