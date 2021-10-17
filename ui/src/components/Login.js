@@ -41,7 +41,6 @@ export const Login = ({onFormSubmit}) => {
             {missingInfoAlert && <Alert severity="error">Please fill out both fields</Alert>}
             {invalidEmailAlert && <Alert severity="error">Please enter a valid UofT email</Alert>}
 
-            {/* Will likely need to change the image link once Omar pushes his branch with all the logos*/}
             <img className='login-logo' src="/course_pathway_logo.png" alt="Logo" />
             <div className='login-header'>
                 <h1 style={{color: 'green'}}>Sign in</h1>
@@ -64,7 +63,7 @@ export const Login = ({onFormSubmit}) => {
             {/* If user doesn't have account, they navigate to account creation page from within login page*/}
             <div className='login-create-account'>
                 <footer>
-                    Don't have an account? <Link to='/create-account'>Sign up!</Link>
+                    Don't have an account? <Link to='/signup'>Sign up!</Link>
                  </footer>
             </div>
         </div>

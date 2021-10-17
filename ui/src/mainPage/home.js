@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Link, Router } from "@reach/router";
 import { SearchAndCourse } from "../components/SearchWithList";
-import SignUp from "../components/SignUp";
 import { Login } from "../components/Login"
 import { useState, useEffect } from "react"
+import SignUp from "../components/SignUp";
 
 function Home() {
   // To-Do: Write code to authenticate user. While authToken doesn't exist, we should show login page
@@ -26,8 +26,8 @@ function Home() {
       </nav>
       <Router>
         <SearchAndCourse path="/" />
-        <SignUp path="/signup" />
         <Login path="/login" onFormSubmit={checkCredentials} />
+        <SignUp path="/signup" />
       </Router>
     </>
   );
