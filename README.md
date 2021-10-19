@@ -96,3 +96,11 @@ Chenyang Wang: chenyan.wang@mail.utoronto.ca
 Project Link: https://github.com/ECE444-2021Fall/project1-education-pathways-group-7-apollo
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- CONTACT -->
+## Running the UI project locally
+1. Download and install npm https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+2. Open a terminal, then navigate to the root directory of the UI (aka. /project1-education-pathways-group-7-apollo/ui
+3. Run 'npm i' in the terminal
+4. Run npm run start
+5. The project should be running on localhost:3000, try it out in your web browser!
