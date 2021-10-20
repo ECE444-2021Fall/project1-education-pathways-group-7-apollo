@@ -9,6 +9,8 @@ and progress towards their degree and any minors/certifications. In addition, st
 an easier time finding new courses by improving current tools through better design and
 features. 
 
+Initial course information data obtained from https://github.com/nelaturuk/education_pathways.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
