@@ -11,10 +11,10 @@ def create_app():
         pass
 
     # Load course info
-    resources_dir = os.path.join(os.path.join(os.path.join(
-        os.path.abspath(__file__), '..'), '..'), "resources")
-    course_dir = CourseDirectory(os.path.join(
-        resources_dir, "df_processed.pickle"))
+    # this should work as an absolute path
+    # resources_dir = os.path.join(os.path.join(os.path.join(
+    #     os.path.abspath(__file__), '..'), '..'), "resources")
+    course_dir = CourseDirectory('resources/df_processed.pickle')
     # TODO: load program info
     # TODO: load user info
 
