@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 import pandas as pd
 import numpy as np
+import random
 import os
 
 def jsonify_dict(input):
@@ -15,43 +16,65 @@ def jsonify_dict(input):
             k = k.tolist()
         if isinstance(v, np.ndarray):
             v = v.tolist()
+        if isinstance(k, dict):
+            k = jsonify_dict(k)
+        if isinstance(v, dict):
+            v = jsonify_dict(v)
         ret[k] = v
     return ret
 
+def listify_ndarray(input):
+    """
+    Returns list version of ndarray
+    """
+    if isinstance(input, np.ndarray):
+        return listify_ndarray(input.tolist())
+    else:
+        return input
+            
 class SearchInfo():
     """
     Search object
     """
 
-    def __init__(self, search_field="", search_filters={}):
+    def __init__(self, course_dir=None, search_field="", search_filters={}):
         """
         Initialize search object
+        course_dir is a CourseDirectory object
         search_field is string searched
         search_field is dictionary of headers + values
         """
+        self.set_course_dir(course_dir)
         self.set_search_field(search_field)
         self.set_search_filters(search_filters)
 
+    def set_course_dir(self, course_dir):
+        if course_dir is None:
+            return False
+        self.course_dir = course_dir
+        return True
+
     def set_search_field(self, search_field):
         self.search_field = search_field
-        return
+        return True
 
-    def set_search_filters(self, search_filters, course_dir):
+    def set_search_filters(self, search_filters):
         """
         Validate search filters against supported headers
         search_filters is a dictionary of headers + values
-        course_dir is a CourseDirectory() object
         """
+        if self.course_dir is None:
+            return False
         search_filters = {}
-        supported_search_headers = course_dir.get_supported_search_headers()
+        supported_search_headers = self.course_dir.get_supported_search_headers()
         for header, value in search_filters.items():
             if header in supported_search_headers:
-                header_options = course_dir.get_header_options(header)
+                header_options = self.course_dir.get_header_options(header)
                 if value in header_options:
                     search_filters[header] = value
 
         self.search_filters = search_filters
-        return
+        return True
 
 
 class Course():
@@ -62,7 +85,7 @@ class Course():
     def __init__(self, id=-1, course_dict={}):
         self.set_course_id(id)  # TODO: Want to hide id? if so make it _
         self.set_course_dict(course_dict)
-    
+
     def set_course_id(id):
         self.id = id
 
@@ -101,7 +124,7 @@ class CourseDirectory():
         self.headers = []
         # Default supported headers
         self.default_supported_search_headers = [
-            'Division', 'Department', 'Campus', 'Course Level']
+            'Division', 'Department', 'Campus', 'Course Level', 'Term']
         # Dictionary of supported headers and their supported options
         # Key: header, Value: list of options for header
         self.supported_search_headers = {}
@@ -121,18 +144,30 @@ class CourseDirectory():
             print("%s: Error - Unable to load course info", __func__)
             return
         self.df_processed = pd.read_pickle(course_pickle)
-        self.clean_course_df()
+        self.update_course_df()
         self.headers = self.df_processed.columns.tolist()
 
         # Generate supported search headers and values
         self.supported_search_headers = {}
         for h in self.default_supported_search_headers:
             if h in self.headers:
-                self.supported_search_headers[h] = [('Any')] + \
-                    sorted([t for t in set(self.df_processed[h].values)])
+                if h == 'Term':
+                    # Fixup for term
+                    s = set()
+                    for i in self.df_processed[h].values:
+                        if isinstance(i, list) or isinstance(i, np.ndarray):
+                            for j in i:
+                                s.add(j)
+                        else:
+                            s.add(i)
+                    s = list(s)
+                    self.supported_search_headers[h] = [('Any')] + sorted(s)
+                else:
+                    self.supported_search_headers[h] = [('Any')] + \
+                        sorted([t for t in set(self.df_processed[h].values)])
         self.load_courses()
 
-    def clean_course_df(self):
+    def update_course_df(self):
         """
         Apply all dataframe modifications here
         TODO: implement this as loading from a log file of changes so that the
@@ -141,6 +176,39 @@ class CourseDirectory():
         # Remove "Activity" and "Last updated" columns
         self.df_processed = self.df_processed.drop("Activity", 1)
         self.df_processed = self.df_processed.drop("Last updated", 1)
+        # Generate random average percentages
+        percent_grades = np.random.randint(55, 95, self.df_processed.shape[0])
+        self.df_processed['Average Percent'] = percent_grades
+        # Generate random average letter grades
+        letter_grades = []
+        for i in percent_grades:
+            if 90 <= i <= 100:
+                letter_grades.append("A+")
+            elif 85 <= i <= 89:
+                letter_grades.append("A")
+            elif 80 <= i <= 84:
+                letter_grades.append("A-")
+            elif 77 <= i <= 79:
+                letter_grades.append("B+")
+            elif 73 <= i <= 76:
+                letter_grades.append("B")
+            elif 70 <= i <= 72:
+                letter_grades.append("B-")
+            elif 67 <= i <= 69:
+                letter_grades.append("C+")
+            elif 63 <= i <= 66:
+                letter_grades.append("C")
+            elif 60 <= i <= 62:
+                letter_grades.append("C-")
+            elif 57 <= i <= 59:
+                letter_grades.append("D+")
+            elif 53 <= i <= 56:
+                letter_grades.append("D")
+            elif 50 <= i <= 52:
+                letter_grades.append("D-")
+            else:
+                letter_grades.append("NaN")
+        self.df_processed['Average Grade'] = letter_grades
 
     def load_courses(self):
         """
@@ -154,18 +222,28 @@ class CourseDirectory():
 Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course details': nan, 'Course': '<a href=/course/ECE444H1>ECE444H1</a>', 'FASEAvailable': False, 'MaybeRestricted': False, 'MajorsOutcomes': ['AECPEBASC', 'AEESCBASER', 'AEESCBASEL'], 'MinorsOutcomes': ['AECERBUS',
 'AEMINBUS'], 'AIPreReqs': ['ECE326H1', 'ROB311H1', 'ECE368H1', 'ECE363H1', 'CSC309H1', 'ECE367H1', 'APS360H1', 'ECE353H1', 'ECE344H1', 'ECE318H1', 'ECE358H1', 'ECE361H1', 'ECE355H1', 'ECE311H1', 'ECE352H1', 'ECE354H1', 'ECE345H1', 'ECE302H1', 'ECE356H1', 'CSC384H1', 'ECE349H1', 'ECE360H1', 'ESC301H1', 'ECE320H1', 'MAT389H1', 'ECE342H1']}
         """
-        self.courses = self.df_processed.to_dict('index')
-        self.code_courses = self.df_processed.set_index(
-            'Code').T.to_dict('dict')
+        self.courses = jsonify_dict(self.df_processed.to_dict('index'))
+        self.code_courses = jsonify_dict(self.df_processed.set_index(
+            'Code').T.to_dict('dict'))
         return
 
-    # TODO: implement adding course and saving info to new course pickle
+    # TODO: implement adding course and saving info to new course pickle for maintenance
+    def get_default_supported_search_headers(self):
+        """
+        Retrieve default supported headers list
+        """
+        return self.default_supported_search_headers
 
-    def set_default_supported_search_headers(self, default_supported_search_headers):
+    def set_default_supported_search_headers(self,
+                                             default_supported_search_headers=['Division', 'Department', 'Campus', 'Course Level']):
         """
-        Update default supported headers list and update supported_search_headers dict
+        Update default supported headers list if it's a valid header
         """
-        # TODO: implement this
+        new_default_headers = []
+        for i in default_supported_search_headers:
+            if i in self.headers:
+                new_default_headers.append(i)
+        self.default_supported_search_headers = new_default_headers
         return
 
     def get_course_df(self):
@@ -183,13 +261,6 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
         """
         return self.supported_search_headers
 
-    def get_supported_header_options(self, header):
-        """
-        For a given supported header, return all the possible options
-        If header not supported, return nothing
-        """
-        return self.supported_search_headers
-
     def search(self, input="", filters={}):
         """
         For a given input or filters, search for all valid courses
@@ -200,6 +271,18 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
         """
         # TODO: implement this
         return []
+
+    def get_all_courses_id(self):
+        """
+        Returns all the courses indexed by id
+        """
+        return self.courses
+
+    def get_all_courses_code(self):
+        """
+        Returns all the courses indexed by course code
+        """
+        return self.code_courses
 
     def jsonify_course_list(self, course_list=[]):
         """
@@ -245,18 +328,7 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
             return {}
         course_json = self.code_courses[course_code]
         course_json['Code'] = course_code
-        return jsonify_dict(course_json)
-    # TODO; remove this, this is temporary function
-
-    def print_data(self):
-        resources_dir = os.path.join(os.path.join(os.path.join(
-            os.path.abspath(__file__), '..'), '..'), "resources")
-        df_processed = pd.read_pickle(os.path.join(
-            resources_dir, "df_processed.pickle"))
-        pd.set_option("display.max_rows", None, "display.max_columns", None)
-        print(df_processed.head(5))
-        return
-
+        return course_json
 
 class Program():
     """
@@ -272,18 +344,27 @@ class Program():
 
 class ProgramDirectory():
     """
-    TODO: implement this
+    This class will manage program majors and minors
     """
 
-    def __init__(self, course_pickle=None):
+    def __init__(self, course_directory=None):
         """
-        TODO: implement this to initialze program data from course data
-        or load from new data
+        Initialize program directory from a course directory object
+        TODO: Integrate this with mongo db
         """
+        self.majors = {}
+        self.minors = {}
+        self.course_dir = course_directory
+        self.load_programs()
         return
-
-    def load_program_info(self, course_pickle=None):
+    
+    def load_programs(self):
         """
-        TODO: implement this to load program info from course pickle
+        Initialize majors and minors from course directory
+        Assign a 
         """
-        return
+        if self.course_dir is None:
+            return
+        
+        # MajorsOutcomes
+        # MinorsOutcomes

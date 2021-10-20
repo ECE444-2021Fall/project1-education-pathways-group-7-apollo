@@ -33,8 +33,22 @@ def create_app():
         """
         # TODO: status: done, need to write automated test
         return course_dir.get_supported_search_headers()
+    
+    @app.route('/api/all_courses_id')
+    def retrieve_all_courses_indexed_by_id():
+        """
+        Retrieve all courses indexed by id
+        """
+        return course_dir.get_all_courses_id()
 
-    @app.route('/results')
+    @app.route('/api/all_courses_code')
+    def retrieve_all_courses_indexed_by_code():
+        """
+        Retrieve all courses indexed by course code
+        """
+        return course_dir.get_all_courses_code()
+
+    @app.route('/api/search/')
     def search_results(search):
         """
         Returns search results given search
@@ -42,13 +56,14 @@ def create_app():
         # TODO: implement
         return
 
-    @app.route('/course/<code>')
+    @app.route('/api/course/<code>')
     def retrieve_course(code):
         """
         Retrieve detailed course info for a given course
         """
         # TODO: status done, need to write automated test
         return course_dir.get_course_json_from_code(code)
+
     return app
 
 # Open files
