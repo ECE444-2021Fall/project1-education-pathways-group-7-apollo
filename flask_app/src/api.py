@@ -1,13 +1,14 @@
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask import Flask, render_template, request, redirect, jsonify
+import certifi
 import os
 
 # Load config from a .env file:
 load_dotenv()
 MONGODB_URI = os.environ['MONGODB_URI']
 # Connect to your MongoDB cluster:
-client = MongoClient(MONGODB_URI)
+client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 
 from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDirectory
 
@@ -76,7 +77,8 @@ def create_app():
     def fetch_collections():
         db = client['cocktails']
         collections = db.list_collection_names()
-        return collections
+        print(collections)
+        return 'gotit'
 
     return app
 
