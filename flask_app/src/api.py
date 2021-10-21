@@ -77,8 +77,7 @@ def create_app():
     def fetch_collections():
         db = client['cocktails']
         collections = db.list_collection_names()
-        print(collections)
-        return 'gotit'
+        return {"cols": collections}
 
     return app
 
