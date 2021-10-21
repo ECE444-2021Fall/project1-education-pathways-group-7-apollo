@@ -1,5 +1,13 @@
+from dotenv import load_dotenv
+from pymongo import MongoClient
 from flask import Flask, render_template, request, redirect, jsonify
 import os
+
+# Load config from a .env file:
+load_dotenv()
+MONGODB_URI = os.environ['MONGODB_URI']
+# Connect to your MongoDB cluster:
+client = MongoClient(MONGODB_URI)
 
 from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDirectory
 
@@ -63,6 +71,12 @@ def create_app():
         """
         # TODO: status done, need to write automated test
         return course_dir.get_course_json_from_code(code)
+
+    @app.route('/api/mongo')
+    def fetch_collections():
+        db = client['cocktails']
+        collections = db.list_collection_names()
+        return collections
 
     return app
 
