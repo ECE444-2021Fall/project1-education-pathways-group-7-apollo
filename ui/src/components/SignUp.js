@@ -1,9 +1,6 @@
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
-
 import React, { Component } from 'react';
-import logo from '../app-logo.png';
-import appBackground from '../app-background.png';
 import axios from 'axios';
 import { FormErrors } from './FormErrors';
 
@@ -37,7 +34,7 @@ const Background = styled("div") ({
     position: 'absolute',
     width: '100vw',
     height: '300vh',
-    backgroundImage:`url(${appBackground})`
+    backgroundImage:"url(/app-background.png)"
 })
 
 const MainContainer = styled("div")({
@@ -160,7 +157,7 @@ class SignUp extends Component {
                 <MainContainer sx={{ boxShadow: 3 }}>               
                     <FormControl className="sign-up" onSubmit={this.onSubmit}>
                         <div style={{    alignSelf: 'center'    }}>
-                                <img src={logo} style={{
+                                <img src="/app-logo.png" style={{
                                     width: "35vh"
                                 }} alt="" />
                         </div>
@@ -202,7 +199,7 @@ class SignUp extends Component {
                             name="first_name"
                             placeholder="Enter First Name"
                             value={this.state.first_name}
-                            onChange={this.onChange} />  
+                            onChange={this.onChange} />
                         <TextField
                             style={{
                                 position: 'relative',

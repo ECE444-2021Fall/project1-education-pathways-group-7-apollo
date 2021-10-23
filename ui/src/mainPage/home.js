@@ -23,6 +23,8 @@ function Home() {
         <Link to="login">Login</Link>
         {"  "}
         <Link to="signup">SignUp</Link>
+        {"  "}
+        <Link to="password-recovery">ForgotPassword</Link>
       </nav>
       <Router>
         <SearchAndCourse path="/" />
