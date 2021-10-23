@@ -26,12 +26,13 @@ function Home() {
         <Link to="signup">SignUp</Link>
         {"  "}
         <Link to="courses-taken">CoursesTaken</Link>
+        <Link to="password-recovery">ForgotPassword</Link>
       </nav>
       <Router>
         <SearchAndCourse path="/" />
         <Login path="/login" onFormSubmit={checkCredentials} />
         <SignUp path="/signup" />
-        <CoursesTaken path="/courses-taken" />
+        <CoursesTaken path="/signup/courses-taken" />
       </Router>
     </>
   );
