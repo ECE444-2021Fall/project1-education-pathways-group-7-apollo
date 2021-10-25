@@ -1,10 +1,17 @@
+import React, { Component } from "react";
+import { Link } from "@reach/router"
 import { TextField } from '@material-ui/core';
+import { useHistory } from "@reach/router";
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
-
-import React, { Component } from 'react';
-import logo from '../app-logo.png';
 import axios from 'axios';
 import { FormErrors } from './FormErrors';
+
+const ViewTwo = ({onClick}) => (
+  <div>
+    View 2 <br />
+    <button onClick={() => onClick("view1")}>Go to view 1</button>
+  </div>
+);
 
 const register = newUser => {
     return axios
@@ -28,34 +35,34 @@ const year = [
     {label: '4+', value: '4'},
 ];
 
-const validateUofTEmail = (email) => {
-    return email.includes('@mail.utoronto.ca')
-}
-
+const Background = styled("div") ({
+    position: 'absolute',
+    width: '100vw',
+    height: '300vh',
+    backgroundImage:"url(/app-background.png)"
+})
 
 const MainContainer = styled("div")({
-    height: '100vh',
+    position: 'absolute',
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    marginLeft: '30%',
-    width: '40%',
-    height:  '70%',
+    marginLeft: '35vw',
     fontFamily: 'Bodoni Moda',
-    fontsize: '10%',
+    fontsize: '10vh',
     fontWeight: 'bold',
     backgroundColor:'#f7f6f6',
-    display: 'flex',
     flexDirection: 'column',
-    padding: 10,
-    borderRadius: '5%',
+    padding: 12,
+    borderRadius: '5vh',
     boxShadow: 3,
     color: "#4ac1c3",
-    marginTop: '10%',
+    marginTop: '10vh',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)',
 
     '& .MuiTextField-root': {
     margin: 5,
-    width: '300%',
+    width: '300vh',
     },
     '& .MuiButtonBase-root': {
     margin: 2,
@@ -63,6 +70,7 @@ const MainContainer = styled("div")({
 });
 
 class SignUp extends Component {
+    // Store user information
     constructor() {
         super()
         this.state = {
@@ -82,15 +90,18 @@ class SignUp extends Component {
         this.onSubmit = this.onSubmit.bind(this)
     }
 
+    // Modify state  of field based on user input
     onChange (e) {
         this.setState({ [e.target.name]: e.target.value }, 
             () => { this.validateField(e.target.name, e.target.value) })
     }
 
+    // Validate form and create a new user
     onSubmit (e) {
         e.preventDefault()
 
-        const { password, confirm_password } = this.state;
+        const { password } = this.state.password;
+        const { confirm_password } = this.state.confirm_password;
 
         if (password !== confirm_password) {
             alert("Passwords don't match!");
@@ -112,8 +123,8 @@ class SignUp extends Component {
 
     }
 
+    // Valid a UofT email is used and validate that password is not too short
     validateField(fieldName, value) {
-        let password = this.state.password;
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let passwordValid = this.state.passwordValid;
@@ -121,11 +132,11 @@ class SignUp extends Component {
         switch(fieldName) {
             case 'email':
                 emailValid = (value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) && value.includes('@mail.utoronto.ca');
-                fieldValidationErrors.email = emailValid ? '' : ' is invalid. please enter a valid UofT email';
+                fieldValidationErrors.email = emailValid ? '' : ' is invalid, please enter a valid UofT email!';
                 break;
             case 'password':
                 passwordValid = value.length >= 6;
-                fieldValidationErrors.password = passwordValid ? '': ' is too short';
+                fieldValidationErrors.password = passwordValid ? '': ' is too short!';
                 break;
             default:
                 break;
@@ -149,44 +160,45 @@ class SignUp extends Component {
 
         return (         
             <>
-            <MainContainer sx={{ boxShadow: 3 }}> 
-                
-                <FormControl className="sign-up" onSubmit={this.onSubmit}>
-                <div className="logo-container">
-                        <img src={logo} style={{
-                            width: "50%",
-                            marginLeft: '25%',
-                            paddingBottom: '5%',
-
-                        }} alt="" />
-                </div>
-                    <Typography 
-                        style={{
-                            fontFamily: 'Bodoni Moda',
-                            fontSize: "120%",
-                            textAlign: 'center',
-                            paddingBottom: '5%',
-                            fontWeight: 'bold',
-
-                        }}
-                        variant="h1" 
-                        component="h2">Sign Up</Typography>
+            <Background>
+                <MainContainer sx={{ boxShadow: 3 }}>               
+                    <FormControl className="sign-up" onSubmit={this.onSubmit}>
+                        <div style={{    alignSelf: 'center'    }}>
+                                <img src="/app-logo.png" style={{
+                                    width: "35vh"
+                                }} alt="" />
+                        </div>
+                            <Typography 
+                                style={{
+                                    fontFamily: 'Bodoni Moda',
+                                    fontSize: "200%",
+                                    textAlign: 'left',
+                                    paddingBottom: '1vh',
+                                    fontWeight: '500',
+                                    color: '#696969'
+                                }}
+                                variant="h1" 
+                                component="h2">Create your account.</Typography>
                         <div
                             style={{
                                 fontFamily: 'Bodoni Moda',
                                 fontSize: "120%",
-                                textAlign: 'center',
-                                paddingBottom: '5%',
-                                fontWeight: 'bold',
-                                color:'red'
+                                textAlign: 'left',
+                                marginLeft: '1vh',
+                                fontWeight: '500',
+                                color:'#cc0000'
 
                         }}>
-                            <FormErrors formErrors={this.state.formErrors} />
+                        <FormErrors formErrors={this.state.formErrors} />
                         </div>
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%',
                             }}
                             label="First Name"
                             variant="filled"
@@ -195,13 +207,14 @@ class SignUp extends Component {
                             placeholder="Enter First Name"
                             value={this.state.first_name}
                             onChange={this.onChange} />
-                   
-
-                    
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%'
                             }}
                             label="Last Name"
                             variant="filled"
@@ -210,11 +223,14 @@ class SignUp extends Component {
                             placeholder="Enter Last Name"
                             value={this.state.last_name}
                             onChange={this.onChange} />
-                    
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%'
                             }}
                             label="Email"
                             variant="filled"
@@ -223,11 +239,14 @@ class SignUp extends Component {
                             placeholder="Enter Email"
                             value={this.state.email}
                             onChange={this.onChange} />
-                    
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%'
                             }}
                             type="password"
                             label="Password"
@@ -237,11 +256,14 @@ class SignUp extends Component {
                             placeholder="Enter Password"
                             value={this.state.password}
                             onChange={this.onChange} />
-                    
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%'
                             }}
                             type="password"
                             label="Confirm Password"
@@ -251,27 +273,34 @@ class SignUp extends Component {
                             value={this.state.confirm_password}
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
-                    
                         <TextField
                             style={{
+                                position: 'relative',
                                 fontFamily: 'Bodoni Moda',
-                                width: '98%'
+                                width: '25vw',
+                                alignSelf: 'center',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                borderRadius: '5%'
                             }}
                             label="Major"
                             variant="filled"
+                            required
                             name="major"
                             placeholder="Please Enter Your Major"
                             value={this.state.major}
                             onChange={this.onChange} />
-                    
                         <Select 
                             style={{
+                                position: 'relative',
+                                alignSelf: 'center',
                                 borderRadius: 5,
-                                width: '98%',
+                                width: '25vw',
                                 fontSize: "100%",
-                                marginLeft:  '1%'
+                                marginTop: '1vh',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                             }}
                             name="year" 
+                            required
                             value={this.state.year} 
                             onChange={this.onChange}
                             label="year"
@@ -284,25 +313,37 @@ class SignUp extends Component {
                                 <MenuItem value={option.value}>{option.label}</MenuItem>
                             ))}
                         </Select>
-                    
                         <Button 
                             style={{
+                                fontFamily: 'Bodoni Moda',
                                 borderRadius: 5,
-                                width: '100%',
+                                width: '25vw',
+                                alignSelf: 'center',
                                 backgroundColor: "#4ac1c3",
                                 fontSize: "80%",
-                                marginTop: '5%',
-                                marginBottom: '5%',
-                                fontWeight: 'bold'
+                                marginTop: '2vh',
+                                marginBottom: '2vh',
+                                fontWeight: 'bold',
+                                paddingTop: '1vh',
+                                paddingBottom: '1vh',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                             }}
                             variant="contained"
                             type="submit"  
                             className="btn btn-lg btn-primary btn-block"
                             disabled={!this.state.formValid}>
-                            Sign Up
+                            <Link
+                                style={{
+                                position: 'relative',
+                                fontFamily: 'Bodoni Moda',
+                                color: '#f7f6f6',
+                                alignSelf: 'center',
+                                }}
+                                to="courses-taken">Sign Up</Link>
                         </Button>
-                </FormControl>
-            </MainContainer>
+                    </FormControl>
+                </MainContainer>
+            </Background>
             </>
         )
     }

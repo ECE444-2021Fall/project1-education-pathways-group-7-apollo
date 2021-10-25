@@ -13,8 +13,16 @@ const MainContainer = styled("div")({
 });
 
 const SearchAndCourse = () => {
+
+  // This data will be used to send the request to the search api
   const [currentQuery, setCurrentQuery] = React.useState("");
+  // This data will be populated from the fetch API
   const [shownCourses, setShownCourses] = React.useState();
+  // Used to prevent duplicates
+  const [addedCoursesMap, setAddedCoursesMap] = React.useState({});
+  // The actual array used for rendering
+  const [addedCourses, setAddedCourses] = React.useState([]);
+
   return (
     <MainContainer>
       <Box sx={{ flexGrow: 1 }}>
@@ -27,8 +35,14 @@ const SearchAndCourse = () => {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid item xs={8}>
-            <CourseList />
+            <CourseList
+              addedCoursesMap={addedCoursesMap}
+              setAddedCoursesMap={setAddedCoursesMap}
+              addedCourses={addedCourses}
+              setAddedCourses={setAddedCourses}
+            />
             <div>The current query is {currentQuery}</div>
+            <div>Added courses: {addedCourses}</div>
           </Grid>
         </Grid>
       </Box>
