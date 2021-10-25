@@ -19,7 +19,13 @@ import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import AddIcon from "@mui/icons-material/Add";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { styled } from "@mui/material/styles";
+
+const TableStyle = styled("div")({
+  width: "50%",
+});
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -90,30 +96,38 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(code, title, fac, desc) {
+function createData(code, title, fac, desc, avg, offerings) {
   return {
     code,
     title,
     fac,
     desc,
-    history: [
-      {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
-      },
-    ],
+    avg,
+    offerings,
   };
 }
 
 function Row(props) {
-  const { row } = props;
+  const {
+    row,
+    addedCourses,
+    setAddedCourses,
+    addedCoursesMap,
+    setAddedCoursesMap,
+  } = props;
   const [open, setOpen] = React.useState(false);
+
+  const addCourses = React.useCallback(
+    (row) => {
+      if (!addedCoursesMap.hasOwnProperty(row)) {
+        const newCourses = { ...addedCoursesMap, [row]: "Dummy data" };
+        setAddedCoursesMap(newCourses);
+        const newCourseArray = [...addedCourses, row];
+        setAddedCourses(newCourseArray);
+      }
+    },
+    [addedCourses, setAddedCourses, addedCoursesMap, setAddedCoursesMap]
+  );
 
   return (
     <React.Fragment>
@@ -132,15 +146,41 @@ function Row(props) {
         </TableCell>
         <TableCell align="left">{row.title}</TableCell>
         <TableCell align="left">{row.fac}</TableCell>
+        <TableCell>
+          <IconButton
+            aria-label="add-course"
+            size="small"
+            onClick={() => addCourses(row.code)}
+          >
+            <AddIcon />
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography
+                aria-label="course-desc"
+                variant="h6"
+                gutterBottom
+                component="div"
+              >
                 Description
               </Typography>
               <div>{row.desc}</div>
+              <Table size="small" aria-label="advanced course info">
+                <TableRow>
+                  <TableCell>Course Average</TableCell>
+                  <TableCell>Offerings</TableCell>
+                </TableRow>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>{row.avg}</TableCell>
+                    <TableCell>{row.offerings}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Box>
           </Collapse>
         </TableCell>
@@ -154,13 +194,17 @@ const rows = [
     "ECE444",
     "Software Engineering",
     "Applied Science and Engineering",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "B",
+    ["Fall 2022, Winter 2022"]
   ),
   createData("ECE100", "Orientation to ECE", "Applied Science and Engineering"),
   createData("ECE496", "Capstone", "Applied Science and Engineering"),
 ];
 
-const CourseList = () => {
+const CourseList = (props) => {
+  const { setAddedCourses, addedCourses, addedCoursesMap, setAddedCoursesMap } =
+    props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -177,51 +221,60 @@ const CourseList = () => {
     setPage(0);
   };
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Course Code</TableCell>
-            <TableCell align="left">Title</TableCell>
-            <TableCell align="left">Faculty</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
+    <TableStyle>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell align="left">Course Code</TableCell>
+              <TableCell align="left">Title</TableCell>
+              <TableCell align="left">Faculty</TableCell>
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+            ).map((row) => (
+              <Row
+                key={row.name}
+                row={row}
+                addedCourses={addedCourses}
+                setAddedCourses={setAddedCourses}
+                addedCoursesMap={addedCoursesMap}
+                setAddedCoursesMap={setAddedCoursesMap}
+              />
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </TableStyle>
   );
 };
 
