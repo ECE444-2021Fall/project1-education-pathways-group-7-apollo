@@ -1,17 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "@reach/router"
 import { TextField } from '@material-ui/core';
-import { useHistory } from "@reach/router";
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { FormErrors } from './FormErrors';
-
-const ViewTwo = ({onClick}) => (
-  <div>
-    View 2 <br />
-    <button onClick={() => onClick("view1")}>Go to view 1</button>
-  </div>
-);
 
 const register = newUser => {
     return axios
