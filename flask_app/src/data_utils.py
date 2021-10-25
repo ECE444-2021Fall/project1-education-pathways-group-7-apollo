@@ -76,6 +76,30 @@ class SearchInfo():
         self.search_filters = search_filters
         return True
 
+    def search(self):
+        """
+        Assuming search field and search filters have been set, make search
+        """
+        if self.course_dir is None:
+            return {}
+
+        # Filter course df for those that have search field as a substring in
+        # Code, Name, or Course Description
+        search_result = {}
+        df = self.course_dir.get_course_df()
+        # searched = df[df[]]
+        print("df5")
+        print(df.head(5))
+        if self.search_field == "":
+            print("todo")
+        filters = {}
+        # Set filters to be only those that were specified
+        for k, v in self.search_filters.items():
+            if v == "Any":
+                continue
+            filters[k] = v
+
+        return {}
 
 class Course():
     """
@@ -328,6 +352,17 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
             return {}
         course_json = self.code_courses[course_code]
         course_json['Code'] = course_code
+        return course_json
+
+    def get_course_json_from_id(self, course_id):
+        """
+        For a given course code, return course json
+        """
+        course_id = int(course_id)
+        if course_id not in self.courses.keys():
+            # No course id found
+            return {}
+        course_json = self.courses[course_id]
         return course_json
 
 class Program():
