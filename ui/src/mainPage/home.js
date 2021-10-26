@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import SignUp from "../components/SignUp";
 import CoursesTaken from "../components/CoursesTaken";
 import { ProgressBar } from "../components/ProgressBar";
+import PersistentDrawerLeft from "../components/SidebarFilters";
 
 function Home() {
   // To-Do: Write code to authenticate user. While authToken doesn't exist, we should show login page
@@ -26,6 +27,8 @@ function Home() {
         {"  "}
         <Link to="signup">SignUp</Link>
         {"  "}
+        <Link to="sidebar-filters">SidebarFilters</Link>
+        {"  "}
         <Link to="courses-taken">CoursesTaken</Link>
         {"  "}
         <Link to="progress-bar">ProgressBar</Link>
@@ -36,6 +39,7 @@ function Home() {
         <SignUp path="/signup" />
         <CoursesTaken path="/signup/courses-taken" />
         <ProgressBar path="/progress-bar" />
+        <PersistentDrawerLeft path="/sidebar-filters" />
       </Router>
     </>
   );
