@@ -4,7 +4,8 @@ import { SearchAndCourse } from "../components/SearchWithList";
 import { Login } from "../components/Login"
 import { useState, useEffect } from "react"
 import SignUp from "../components/SignUp";
-import CoursesTaken from "../components/CoursesTaken"
+import CoursesTaken from "../components/CoursesTaken";
+import PersistentDrawerLeft from "../components/SidebarFilters";
 
 function Home() {
   // To-Do: Write code to authenticate user. While authToken doesn't exist, we should show login page
@@ -25,6 +26,8 @@ function Home() {
         {"  "}
         <Link to="signup">SignUp</Link>
         {"  "}
+        <Link to="sidebar-filters">SidebarFilters</Link>
+        {"  "}
         <Link to="courses-taken">CoursesTaken</Link>
         <Link to="password-recovery">ForgotPassword</Link>
       </nav>
@@ -33,6 +36,7 @@ function Home() {
         <Login path="/login" onFormSubmit={checkCredentials} />
         <SignUp path="/signup" />
         <CoursesTaken path="/signup/courses-taken" />
+        <PersistentDrawerLeft path="/sidebar-filters" />
       </Router>
     </>
   );
