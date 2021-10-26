@@ -21,6 +21,7 @@ def create_app():
     def display_home_info():
         """
         Return home page info
+        Example: 127.0.0.1:5000/
         """
         # TODO: don't need this
         return "Hello World!"
@@ -29,6 +30,7 @@ def create_app():
     def retrieve_supported_search_headers():
         """
         Retrieve a list of supported search headers and their options
+        Example: 127.0.0.1:5000/api/supported_search_headers
         """
         # TODO: status done, tested, need to write automated test
         return course_dir.get_supported_search_headers()
@@ -37,6 +39,7 @@ def create_app():
     def retrieve_all_courses_indexed_by_id():
         """
         Retrieve all courses indexed by id
+        Example: 127.0.0.1:5000/api/all_courses_id
         """
         # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_id()
@@ -45,6 +48,7 @@ def create_app():
     def retrieve_all_courses_indexed_by_code():
         """
         Retrieve all courses indexed by course code
+        Example: 127.0.0.1:5000/api/all_courses_code
         """
         # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_code()
@@ -61,7 +65,10 @@ def create_app():
         headers (retrieved by /api/supported_search_headers), and value is the option for that header
 
         Output format as a list of courses with index
+
+        Example: 127.0.0.1:5000/api/search/?search_field=software&search_filters={"Campus" : "St. George", "Course Level" : "4", "Department" : "Edward S. Rogers Sr. Dept. of Electrical %26 Computer Engin.", "Division" : "Faculty of Applied Science %26 Engineering", "Term": "2022 Winter" }
         """
+        # TODO: status done, tested, need to write automated test
         if "search_field" not in request.args or \
             "search_filters" not in request.args:
             return {}
@@ -74,6 +81,7 @@ def create_app():
     def retrieve_course(code):
         """
         Retrieve detailed course info for a given course code
+        Example: 127.0.0.1:5000/api/course/ECE444H1
         """
         # TODO: status done, tested, need to write automated test
         return course_dir.get_course_json_from_code(code)
@@ -82,6 +90,7 @@ def create_app():
     def retrieve_course_from_id(course_id):
         """
         Retrieve detailed course info for a given course id
+        Example: localhost:5000/api/course_id/2
         """
         # TODO: status done, tested, need to write automated test
         return course_dir.get_course_json_from_id(course_id)
