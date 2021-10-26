@@ -1,10 +1,12 @@
 # ------------------------------------------------------------------------------
 # Classes and functions to manage user, course, and program data
 # ------------------------------------------------------------------------------
-import pandas as pd
+import json
 import numpy as np
-import random
 import os
+import pandas as pd
+import random
+import re
 
 def jsonify_dict(input):
     """
@@ -65,17 +67,64 @@ class SearchInfo():
         """
         if self.course_dir is None:
             return False
-        search_filters = {}
+        search_filters = json.loads(search_filters)
         supported_search_headers = self.course_dir.get_supported_search_headers()
         for header, value in search_filters.items():
             if header in supported_search_headers:
-                header_options = self.course_dir.get_header_options(header)
+                header_options = self.course_dir.get_supported_search_headers()[header]
                 if value in header_options:
                     search_filters[header] = value
 
         self.search_filters = search_filters
         return True
 
+    def search(self):
+        """
+        Assuming search field and search filters have been set, make search
+        """
+        if self.course_dir is None:
+            return {}
+
+        search_result = None
+        if self.search_field == "":
+            search_result = self.course_dir.get_course_df()
+        else:
+            # Filter course df for those that have search field as a substring in
+            # Code, Name, or Course Description
+            df = self.course_dir.get_course_df()
+            code_result = df[df["Code"].str.contains(self.search_field, flags=re.IGNORECASE, na=False)]
+            name_result = df[df["Name"].str.contains(self.search_field, flags=re.IGNORECASE, na=False)]
+            description_result = df[df["Course Description"].str.contains(self.search_field, flags=re.IGNORECASE, na=False)]
+            search_result = pd.concat([code_result, name_result, description_result], axis=0)
+        
+        # Drop duplicates
+        search_result = search_result[~search_result.index.duplicated(keep='first')]
+        
+        # Set filters to be only those that were specified
+        filters = {}
+        for k, v in self.search_filters.items():
+            if v == "Any":
+                continue
+            filters[k] = v
+        
+        # Filter the results for each of the filters
+        final_df = None
+        for k, v in filters.items():
+            if final_df is None:
+                final_df = search_result[search_result[k].astype(str).str.contains(v, flags=re.IGNORECASE, na=False)]
+            else:
+                # Keep results that match all filters
+                final_df = final_df[final_df[k].astype(str).str.contains(v, flags=re.IGNORECASE, na=False)]
+                # If want to keep all results that match at least 1 filter, then do the following:
+                # final_df = pd.concat([final_df, filter_result], axis = 0)
+
+        # Drop duplicates
+        final_df = final_df[~final_df.index.duplicated(keep='first')]
+        
+        if final_df is not None:
+            return jsonify_dict(final_df.to_dict('index'))
+        else:
+            return {}
 
 class Course():
     """
@@ -328,6 +377,17 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
             return {}
         course_json = self.code_courses[course_code]
         course_json['Code'] = course_code
+        return course_json
+
+    def get_course_json_from_id(self, course_id):
+        """
+        For a given course code, return course json
+        """
+        course_id = int(course_id)
+        if course_id not in self.courses.keys():
+            # No course id found
+            return {}
+        course_json = self.courses[course_id]
         return course_json
 
 class Program():
