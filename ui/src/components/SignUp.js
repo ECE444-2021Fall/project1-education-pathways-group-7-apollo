@@ -5,8 +5,6 @@ import { FormErrors } from './FormErrors';
 import UserService from './UserServices';
 import CoursesTaken from "./CoursesTaken";
 
-
-
 const year = [
     {label: '1', value: '1'},
     {label: '2', value: '2'},

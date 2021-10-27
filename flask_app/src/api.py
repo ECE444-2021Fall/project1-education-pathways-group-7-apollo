@@ -36,46 +36,69 @@ def create_app():
     def display_home_info():
         """
         Return home page info
+        Example: 127.0.0.1:5000/
         """
-        # TODO: don't know what to do for homepage
+        # TODO: don't need this
         return "Hello World!"
 
     @app.route('/api/supported_search_headers')
     def retrieve_supported_search_headers():
         """
         Retrieve a list of supported search headers and their options
+        Example: 127.0.0.1:5000/api/supported_search_headers
         """
-        # TODO: status: done, need to write automated test
+        # TODO: status done, tested, need to write automated test
         return course_dir.get_supported_search_headers()
     
     @app.route('/api/all_courses_id')
     def retrieve_all_courses_indexed_by_id():
         """
         Retrieve all courses indexed by id
+        Example: 127.0.0.1:5000/api/all_courses_id
         """
+        # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_id()
 
     @app.route('/api/all_courses_code')
     def retrieve_all_courses_indexed_by_code():
         """
         Retrieve all courses indexed by course code
+        Example: 127.0.0.1:5000/api/all_courses_code
         """
+        # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_code()
 
     @app.route('/api/search/')
-    def search_results(search):
+    def search_results():
         """
         Returns search results given search
+        Query input params passed in must have the following
+        key: "search_field"
+        value: <string user types>
+        key: "search_filters"
+        value: dictionary of filters where the key is one of the supported search
+        headers (retrieved by /api/supported_search_headers), and value is the option for that header
+
+        Output format as a list of courses with index
+
+        Example: 127.0.0.1:5000/api/search/?search_field=software&search_filters={"Campus" : "St. George", "Course Level" : "4", "Department" : "Edward S. Rogers Sr. Dept. of Electrical %26 Computer Engin.", "Division" : "Faculty of Applied Science %26 Engineering", "Term": "2022 Winter" }
         """
-        # TODO: implement
-        return
+        # TODO: status done, tested, need to write automated test
+        if "search_field" not in request.args or \
+            "search_filters" not in request.args:
+            return {}
+        search_info = SearchInfo(course_dir=course_dir,
+                                 search_field=request.args["search_field"],
+                                 search_filters=request.args["search_filters"])
+        return search_info.search()
 
     @app.route('/api/course/<code>')
     def retrieve_course(code):
         """
-        Retrieve detailed course info for a given course
+        Retrieve detailed course info for a given course code
+        Example: 127.0.0.1:5000/api/course/ECE444H1
         """
-        # TODO: status done, need to write automated test
+        # TODO: status done, tested, need to write automated test
         return course_dir.get_course_json_from_code(code)
 
     @app.route('/api/users', methods=['POST', 'GET'])
