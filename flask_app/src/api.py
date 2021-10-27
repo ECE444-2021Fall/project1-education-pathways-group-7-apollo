@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from flask import Flask, render_template, request, redirect, jsonify
+from datetime import datetime
+from flask_cors import CORS
+from flask import Flask, render_template, request, redirect, jsonify, json
+
 import certifi
 import os
 
@@ -14,6 +17,8 @@ from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDire
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
+
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -73,11 +78,67 @@ def create_app():
         # TODO: status done, need to write automated test
         return course_dir.get_course_json_from_code(code)
 
-    @app.route('/api/mongo')
-    def fetch_collections():
-        db = client['cocktails']
-        collections = db.list_collection_names()
-        return {"cols": collections}
+    @app.route('/api/users', methods=['POST', 'GET'])
+    def users():
+        db = client['user_management']
+
+        # POST a data to database
+        if request.method == 'POST':
+            body = request.json
+            firstName = body['first_name']
+            lastName = body['last_name']
+            email = body['email'] 
+            password = body['password']
+            major = body['major']
+            year = body['year']
+            coursesTaken = body['courses_taken']
+            # db.users.insert_one({
+            db['registration'].insert_one({
+                "firstName": firstName,
+                "lastName": lastName,
+                "email": email,
+                "password": password,
+                "major": major,
+                "year": year,
+                "coursesTaken": coursesTaken
+            })
+            return jsonify({
+                'status': 'Data is posted to MongoDB!',
+                'firstName': firstName,
+                'lastName': lastName,
+                'email': email,
+                "password": password,
+                "major": major,
+                "year": year,
+                "coursesTaken": coursesTaken
+            })
+        
+        # GET all data from database
+        if request.method == 'GET':
+            allData = db['registration'].find()
+            dataJson = []
+            for data in allData:
+                id = data['_id']
+                firstName = data['firstName']
+                lastName = data['lastName']
+                email = data['email'] 
+                password = data['password']
+                major = data['major']
+                year = data['year']
+                coursesTaken = data['coursesTaken']
+                dataDict = {
+                    'id': str(id),
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "email": email,
+                    "password": password,
+                    "major": major,
+                    "year": year,
+                    "coursesTaken": coursesTaken
+                }
+                dataJson.append(dataDict)
+            print(dataJson)
+            return jsonify(dataJson)
 
     return app
 
