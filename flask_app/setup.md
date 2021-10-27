@@ -18,7 +18,9 @@ cd <FLASK_APP_ROOT>
 
 Install flask and dependencies for repo:  
 py -3.8 -m pip install -r .\requirements.txt  
-### TODO: generate requirements.txt  
+
+To update requirements.txt:
+pip3 freeze > requirements.txt 
 
 If any messages appear saying "WARNING: The script flask.exe is installed in '<location>' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.", add the location to your path.  

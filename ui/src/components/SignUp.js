@@ -1,6 +1,7 @@
+import React, { Component } from "react";
+import { Link } from "@reach/router"
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
-import React, { Component } from 'react';
 import axios from 'axios';
 import { FormErrors } from './FormErrors';
 
@@ -26,10 +27,6 @@ const year = [
     {label: '4+', value: '4'},
 ];
 
-const validateUofTEmail = (email) => {
-    return email.includes('@mail.utoronto.ca')
-}
-
 const Background = styled("div") ({
     position: 'absolute',
     width: '100vw',
@@ -47,7 +44,6 @@ const MainContainer = styled("div")({
     fontsize: '10vh',
     fontWeight: 'bold',
     backgroundColor:'#f7f6f6',
-    display: 'flex',
     flexDirection: 'column',
     padding: 12,
     borderRadius: '5vh',
@@ -66,6 +62,7 @@ const MainContainer = styled("div")({
 });
 
 class SignUp extends Component {
+    // Store user information
     constructor() {
         super()
         this.state = {
@@ -85,11 +82,13 @@ class SignUp extends Component {
         this.onSubmit = this.onSubmit.bind(this)
     }
 
+    // Modify state  of field based on user input
     onChange (e) {
         this.setState({ [e.target.name]: e.target.value }, 
             () => { this.validateField(e.target.name, e.target.value) })
     }
 
+    // Validate form and create a new user
     onSubmit (e) {
         e.preventDefault()
 
@@ -116,8 +115,8 @@ class SignUp extends Component {
 
     }
 
+    // Valid a UofT email is used and validate that password is not too short
     validateField(fieldName, value) {
-        let password = this.state.password;
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let passwordValid = this.state.passwordValid;
@@ -288,11 +287,9 @@ class SignUp extends Component {
                                 alignSelf: 'center',
                                 borderRadius: 5,
                                 width: '25vw',
-                                alignSelf: 'center',
                                 fontSize: "100%",
                                 marginTop: '1vh',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
                             }}
                             name="year" 
                             required
@@ -311,7 +308,6 @@ class SignUp extends Component {
                         <Button 
                             style={{
                                 fontFamily: 'Bodoni Moda',
-                                color: '#696969',
                                 borderRadius: 5,
                                 width: '25vw',
                                 alignSelf: 'center',
@@ -322,14 +318,20 @@ class SignUp extends Component {
                                 fontWeight: 'bold',
                                 paddingTop: '1vh',
                                 paddingBottom: '1vh',
-                                alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                             }}
                             variant="contained"
                             type="submit"  
                             className="btn btn-lg btn-primary btn-block"
                             disabled={!this.state.formValid}>
-                            Sign Up
+                            <Link
+                                style={{
+                                position: 'relative',
+                                fontFamily: 'Bodoni Moda',
+                                color: '#f7f6f6',
+                                alignSelf: 'center',
+                                }}
+                                to="courses-taken">Sign Up</Link>
                         </Button>
                     </FormControl>
                 </MainContainer>
