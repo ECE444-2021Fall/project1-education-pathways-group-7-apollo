@@ -1,9 +1,21 @@
 import * as React from "react";
+import axios from "axios";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
+
+function createData(code, title, fac, desc, avg, offerings) {
+  return {
+    code,
+    title,
+    fac,
+    desc,
+    avg,
+    offerings,
+  };
+}
 
 const MainContainer = styled("div")({
   color: "darkslategray",
@@ -13,15 +25,37 @@ const MainContainer = styled("div")({
 });
 
 const SearchAndCourse = () => {
-
   // This data will be used to send the request to the search api
   const [currentQuery, setCurrentQuery] = React.useState("");
   // This data will be populated from the fetch API
-  const [shownCourses, setShownCourses] = React.useState();
+  const [shownCourses, setShownCourses] = React.useState([]);
   // Used to prevent duplicates
   const [addedCoursesMap, setAddedCoursesMap] = React.useState({});
   // The actual array used for rendering
   const [addedCourses, setAddedCourses] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetch = async () => {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/all_courses_code"
+      );
+      const rows = [];
+      for (const course in data) {
+        rows.push(
+          createData(
+            course,
+            data[course].Name,
+            data[course].Department,
+            data[course]["Course Description"],
+            data[course]["Average Grade"],
+            data[course].Term
+          )
+        );
+      }
+      setShownCourses(rows);
+    };
+    fetch();
+  }, [currentQuery]);
 
   return (
     <MainContainer>
@@ -36,6 +70,7 @@ const SearchAndCourse = () => {
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <CourseList
+              shownCourses={shownCourses}
               addedCoursesMap={addedCoursesMap}
               setAddedCoursesMap={setAddedCoursesMap}
               addedCourses={addedCourses}

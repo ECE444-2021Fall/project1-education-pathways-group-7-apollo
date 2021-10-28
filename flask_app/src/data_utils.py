@@ -2,6 +2,7 @@
 # Classes and functions to manage user, course, and program data
 # ------------------------------------------------------------------------------
 import json
+import simplejson
 import numpy as np
 import os
 import pandas as pd
@@ -23,7 +24,7 @@ def jsonify_dict(input):
         if isinstance(v, dict):
             v = jsonify_dict(v)
         ret[k] = v
-    return ret
+    return simplejson.loads(simplejson.dumps(ret, ignore_nan=True))
 
 def listify_ndarray(input):
     """
@@ -256,7 +257,7 @@ class CourseDirectory():
             elif 50 <= i <= 52:
                 letter_grades.append("D-")
             else:
-                letter_grades.append("NaN")
+                letter_grades.append("null")
         self.df_processed['Average Grade'] = letter_grades
 
     def load_courses(self):

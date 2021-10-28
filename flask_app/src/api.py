@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, redirect, jsonify
+from flask_cors import CORS
 import os
+import simplejson as json
 
 from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDirectory
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
     try:
         os.makedirs(app.instance_path)
     except OSError:
