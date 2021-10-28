@@ -222,7 +222,7 @@ const CourseList = (props) => {
               <TableCell />
               <TableCell align="left">Course Code</TableCell>
               <TableCell align="left">Title</TableCell>
-              <TableCell align="left">Faculty</TableCell>
+              <TableCell align="left">Department</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

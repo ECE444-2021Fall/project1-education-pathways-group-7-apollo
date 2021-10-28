@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const SearchBar = ({ setCurrentQuery }) => {
+const SearchBar = ({ fetchCourses }) => {
   const [searchInput, setSearchInput] = React.useState("");
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
@@ -29,8 +29,7 @@ const SearchBar = ({ setCurrentQuery }) => {
       />
       <Button
         onClick={() => {
-          alert(searchInput);
-          setCurrentQuery(searchInput);
+          fetchCourses(searchInput);
         }}
         variant="contained"
       >

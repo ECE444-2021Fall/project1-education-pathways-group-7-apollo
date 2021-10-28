@@ -25,8 +25,6 @@ const MainContainer = styled("div")({
 });
 
 const SearchAndCourse = () => {
-  // This data will be used to send the request to the search api
-  const [currentQuery, setCurrentQuery] = React.useState("");
   // This data will be populated from the fetch API
   const [shownCourses, setShownCourses] = React.useState([]);
   // Used to prevent duplicates
@@ -34,35 +32,34 @@ const SearchAndCourse = () => {
   // The actual array used for rendering
   const [addedCourses, setAddedCourses] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetch = async () => {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/all_courses_code"
+  const fetchCourses = React.useCallback(async (query) => {
+    const { data } = await axios.get(
+      "http://localhost:5000/api/all_courses_id"
+    );
+    const rows = [];
+    for (const course in data) {
+      rows.push(
+        createData(
+          data[course].Code,
+          data[course].Name,
+          data[course].Department,
+          data[course]["Course Description"],
+          data[course]["Average Grade"],
+          data[course].Term
+        )
       );
-      const rows = [];
-      for (const course in data) {
-        rows.push(
-          createData(
-            course,
-            data[course].Name,
-            data[course].Department,
-            data[course]["Course Description"],
-            data[course]["Average Grade"],
-            data[course].Term
-          )
-        );
-      }
-      setShownCourses(rows);
-    };
-    fetch();
-  }, [currentQuery]);
+    }
+    setShownCourses(rows);
+  });
 
   return (
     <MainContainer>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid item xs={8}>
-            <SearchBar setCurrentQuery={setCurrentQuery} />
+            <SearchBar
+              fetchCourses={fetchCourses}
+            />
           </Grid>
         </Grid>
       </Box>
@@ -76,7 +73,6 @@ const SearchAndCourse = () => {
               addedCourses={addedCourses}
               setAddedCourses={setAddedCourses}
             />
-            <div>The current query is {currentQuery}</div>
             <div>Added courses: {addedCourses}</div>
           </Grid>
         </Grid>
