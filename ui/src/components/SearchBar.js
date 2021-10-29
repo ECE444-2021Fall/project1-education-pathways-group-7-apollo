@@ -10,12 +10,13 @@ const SearchBar = ({ fetchCourses }) => {
     <Stack spacing={2} sx={{ width: 300 }}>
       <Autocomplete
         freeSolo
-        id="free-solo-2-demo"
+        data-testid="course-search-bar"
         disableClearable
         options={top100Films.map((option) => option.title)}
         renderInput={(params) => (
           <TextField
             {...params}
+            data-testid="course-search-bar-input"
             label="Search input"
             InputProps={{
               ...params.InputProps,
