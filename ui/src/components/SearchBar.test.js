@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SearchBar } from "./SearchBar";
 
+// Written by Toby Kurniawan
 test("renders search bar emtpy", () => {
   const mockFetchCallback = jest.fn();
   render(<SearchBar fetchCourses={mockFetchCallback} />);
@@ -11,6 +12,7 @@ test("renders search bar emtpy", () => {
   expect(goButton).toBeInTheDocument();
 });
 
+// Written by Toby Kurniawan
 test("clicking go button calls fetch callback", () => {
     const mockFetchCallback = jest.fn();
     render(<SearchBar fetchCourses={mockFetchCallback} />);
@@ -18,6 +20,7 @@ test("clicking go button calls fetch callback", () => {
     expect(mockFetchCallback).toBeCalledTimes(1);
 });
 
+// Written by Toby Kurniawan
 test("filling search bar keeps the value", () => {
     const mockFetchCallback = jest.fn();
     render(<SearchBar fetchCourses={mockFetchCallback} />);
