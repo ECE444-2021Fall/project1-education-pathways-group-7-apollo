@@ -1,24 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router"
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
-import axios from 'axios';
 import { FormErrors } from './FormErrors';
-
-const register = newUser => {
-    return axios
-        .post("users/signup", {
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
-            email: newUser.email,
-            password: newUser.password,
-            major: newUser.major,
-            year: newUser.year
-        })
-        .then(response => {
-            console.log("User Signed Up Successfully!")
-        })
-}
+import UserService from './UserServices';
+import CoursesTaken from "./CoursesTaken";
 
 const year = [
     {label: '1', value: '1'},
@@ -73,6 +58,7 @@ class SignUp extends Component {
             confirm_password: '',
             major: '',
             year: '',
+            courses_taken: [],
             formErrors: {email: '', password: ''},
             emailValid: false,
             passwordValid: false,
@@ -80,6 +66,7 @@ class SignUp extends Component {
         } 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.handler = this.handler.bind(this)
     }
 
     // Modify state  of field based on user input
@@ -88,31 +75,30 @@ class SignUp extends Component {
             () => { this.validateField(e.target.name, e.target.value) })
     }
 
+    // saves courses taken into state array
+    handler(courses) {
+        this.setState({
+          courses_taken: courses  
+        })
+      }
+
     // Validate form and create a new user
     onSubmit (e) {
         e.preventDefault()
-
-        const { password } = this.state.password;
-        const { confirm_password } = this.state.confirm_password;
-
-        if (password !== confirm_password) {
-            alert("Passwords don't match!");
-        } else {
-            const newUser = {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                password: this.state.password,
-                confirm_password: this.state.confirm_password,
-                major: this.state.major,
-                year: this.state.year
-            }
-
-            register(newUser).then(res => {
-                this.props.history.push(`/login`)
-            })
+    
+        const newUser = {
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            email: this.state.email,
+            password: this.state.password,
+            major: this.state.major,
+            year: this.state.year,
+            courses_taken: this.state.courses_taken
         }
 
+        UserService.createUser(newUser)
+        .then(res => { console.log(res.data); })
+        .catch(err => console.log(err.response.data));
     }
 
     // Valid a UofT email is used and validate that password is not too short
@@ -295,7 +281,6 @@ class SignUp extends Component {
                             required
                             value={this.state.year} 
                             onChange={this.onChange}
-                            label="year"
                             variant='filled'
                             >
                             <MenuItem disabled value={0}>
@@ -305,6 +290,7 @@ class SignUp extends Component {
                                 <MenuItem value={option.value}>{option.label}</MenuItem>
                             ))}
                         </Select>
+                        <CoursesTaken handler={this.handler} />
                         <Button 
                             style={{
                                 fontFamily: 'Bodoni Moda',
@@ -323,15 +309,9 @@ class SignUp extends Component {
                             variant="contained"
                             type="submit"  
                             className="btn btn-lg btn-primary btn-block"
-                            disabled={!this.state.formValid}>
-                            <Link
-                                style={{
-                                position: 'relative',
-                                fontFamily: 'Bodoni Moda',
-                                color: '#f7f6f6',
-                                alignSelf: 'center',
-                                }}
-                                to="courses-taken">Sign Up</Link>
+                            disabled={!this.state.formValid}
+                            onClick={this.onSubmit}>
+                            Sign Up
                         </Button>
                     </FormControl>
                 </MainContainer>
