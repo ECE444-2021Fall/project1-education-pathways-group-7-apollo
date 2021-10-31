@@ -35,4 +35,8 @@ For now, there is only api testing via postman, make a GET request to any of the
 For example:
 127.0.0.1:5000/api/supported_search_headers
 
-### TODO: need to implement unit tests and integration tests
+For testing the app, run the following:
+py -3.8 -m pytest
+
+To test with prints:
+py -3.8 -m  pytest -s

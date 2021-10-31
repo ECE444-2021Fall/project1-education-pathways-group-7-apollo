@@ -412,19 +412,163 @@ class ProgramDirectory():
         Initialize program directory from a course directory object
         TODO: Integrate this with mongo db
         """
-        self.majors = {}
-        self.minors = {}
+        # Majors
+        # Dictionary of majors where
+        # key: major name, value: list of course indexes for that major
+        self.major_id = {}
+        # Dictionary of majors where
+        # key: major name, value: list of course codes for that major
+        self.major_code = {}
+        # Minors
+        # Dictionary of minors where
+        # key: minor name, value: list of course indexes for that minor
+        self.minor_id = {}
+        # Dictionary of minors where
+        # key: minor name, value: list of course codes for that minor
+        self.minor_code = {}
+        # Engineering minors (detailed info)
+        self.eng_minors = {}
+        # Course directory object
         self.course_dir = course_directory
+        if course_directory is not None:
+            self.course_df = course_directory.df_processed
+        # Load program information
         self.load_programs()
         return
     
     def load_programs(self):
         """
-        Initialize majors and minors from course directory
-        Assign a 
+        Initialize majors and minors from course directory and
+        load engineering minor information
         """
         if self.course_dir is None:
+            print("Error: course_dir not found")
             return
         
+        major_id = {}
+        major_code = {}
+        minor_id = {}
+        minor_code = {}
+        for index, row in self.course_df.iterrows():
+            mjr = row["MajorsOutcomes"]
+            mnr = row["MinorsOutcomes"]
+            # Check if there are majors specified
+            for m in mjr:
+                if m in major_id.keys():
+                    major_id[m].append(index)
+                else:
+                    major_id[m] = [index]
+
+                if m in major_code.keys():
+                    major_code[m].append(row["Code"])
+                else:
+                    major_code[m] = [row["Code"]]
+            
+            # Check if there are minors specified
+            for m in mnr:
+                if m in minor_id.keys():
+                    minor_id[m].append(index)
+                else:
+                    minor_id[m] = [index]
+
+                if m in minor_code.keys():
+                    minor_code[m].append(row["Code"])
+                else:
+                    minor_code[m] = [row["Code"]]
+            
+        self.major_id = major_id
+        self.major_code = major_code
+        self.minor_id = minor_id
+        self.minor_code = minor_code
+        # print("headers", self.course_dir.headers)
+        # df['Major']
+        # print(self.course_df["MajorsOutcomes"].astype(str).unique())
+        # print(self.course_df["MajorsOutcomes"].head(10))
         # MajorsOutcomes
         # MinorsOutcomes
+        self.load_eng_minors()
+
+    def load_eng_minors(self):
+        """
+        Load engineering minor information manually
+        """
+        # self.eng_minors = {}
+        # AIE_info = {}
+        # AIE_info["Name"] = "Artificial Intelligence Engineering"
+        # AIE_info["Requirements"] = ["1" : ]
+        # return
+        # TODO: implement
+        return
+
+    def get_majors_id(self):
+        """
+        Return dictionary of majors
+        key: major name
+        value: list of course ids
+        """
+        # TODO: implement
+        return self.major_id
+
+    def get_majors_code(self):
+        """
+        Return dictionary of majors
+        key: major name
+        value: list of course codes
+        """
+        # TODO: implement
+        return self.major_code
+
+    def get_minors_id(self):
+        """
+        Return dictionary of minors
+        key: minor name
+        value: list of course ids
+        """
+        # TODO: implement
+        return self.minor_id
+
+    def get_minors_code(self):
+        """
+        Return dictionary of minors
+        key: minor name
+        value: list of course codes
+        """
+        # TODO: implement
+        return self.minor_code
+    
+    def get_eng_minors(self):
+        """
+        Return dictionary of engineering minors
+        key: engineering minor name
+        value: ???? # TODO: decide this
+        """
+        # TODO: implement
+        return
+    
+
+    def get_major_info(self, major_name):
+        """
+        Given major name, if it is a valid major, return major list of courses
+        Return dictionary of {major : [list of courses]}
+        """
+        # TODO: implement
+        return
+
+    def get_minor_info(self, minor_name):
+        """
+        Given minor name, if it is a valid minor, return minor list of courses
+        Checks against minor dictionary
+        Return dictionary of {minor : [list of courses]}
+        """
+        # TODO: implement
+        return
+
+    def get_eng_minor_info(self, eng_minor_name):
+        """
+        Given engineering minor name, if it is a valid minor,
+        return minor list of courses
+        Checks against minor dictionary
+        Return dictionary of {minor : [list of courses]}
+        """
+        # TODO: implement
+        return
