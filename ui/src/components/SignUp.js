@@ -178,6 +178,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%',
                             }}
+                            data-testid="first-name-input"
                             label="First Name"
                             variant="filled"
                             required
@@ -194,6 +195,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%'
                             }}
+                            data-testid="last-name-input"
                             label="Last Name"
                             variant="filled"
                             required
@@ -210,6 +212,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%'
                             }}
+                            data-testid="email-input"
                             label="Email"
                             variant="filled"
                             required
@@ -226,6 +229,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%'
                             }}
+                            data-testid="password-input"
                             type="password"
                             label="Password"
                             variant="filled"
@@ -243,6 +247,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%'
                             }}
+                            data-testid="confirm-password-input"
                             type="password"
                             label="Confirm Password"
                             variant="filled"
@@ -260,6 +265,7 @@ class SignUp extends Component {
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%'
                             }}
+                            data-testid="major-input"
                             label="Major"
                             variant="filled"
                             required
