@@ -7,8 +7,6 @@ export const Login = ({onFormSubmit}) => {
     // Store username and password to validate
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [missingInfoAlert, setMissingInfoAlert] = useState(false)
-    const [invalidEmailAlert, setInvalidEmailAlert] = useState(false)
 
     // Method for when form is submitted
     const onSubmit = (e) => {
@@ -18,8 +16,6 @@ export const Login = ({onFormSubmit}) => {
         onFormSubmit({ username, password})
 
         // Reset fields
-        setMissingInfoAlert(false)
-        setInvalidEmailAlert(false)
         setUsername('')
         setPassword('')
     }
@@ -52,6 +48,7 @@ export const Login = ({onFormSubmit}) => {
                         variant="filled"
                         required
                         name="email"
+                        data-testid="email-field"
                         placeholder="your_email@mail.utoronto.ca"
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} />  
@@ -68,6 +65,7 @@ export const Login = ({onFormSubmit}) => {
                         type="password"
                         label="Password"
                         variant="filled"
+                        data-testid="password-field"
                         required
                         name="password"
                         placeholder="******"
