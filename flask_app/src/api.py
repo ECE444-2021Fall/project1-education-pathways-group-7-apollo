@@ -15,7 +15,7 @@ MONGODB_URI = os.environ['MONGODB_URI']
 # Connect to your MongoDB cluster:
 client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 
-from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDirectory
+from data_utils import SearchInfo, Course, CourseDirectory, ProgramDirectory
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -33,7 +33,6 @@ def create_app():
     course_dir = CourseDirectory(course_dir_path)
     # Load program info
     program_dir = ProgramDirectory(course_dir)
-    # TODO: load user info
 
     @app.route('/')
     def display_home_info():
@@ -145,37 +144,139 @@ def create_app():
         # TODO: status done, tested, need to write automated test
         return program_dir.get_minors_code()
 
-    @app.route('/api/all_detailed_eng_minors')
-    def retrieve_detailed_eng_minors():
+    @app.route('/api/all_detailed_eng_minors_id')
+    def retrieve_detailed_eng_minors_id():
         """
         Retrieve all detailed engineering minor info
-        Example: TODO
+
+        Returns a dictionary of minor_info dictionaries indexed by minor_id
+        minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/all_detailed_eng_minors_id
         """
-        return program_dir.get_eng_minors()
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minors_id()
+
+    @app.route('/api/all_detailed_eng_minors_name')
+    def retrieve_detailed_eng_minors_name():
+        """
+        Retrieve all detailed engineering minor info
+
+        Returns a dictionary of minor_info dictionaries indexed by minor name
+        minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/all_detailed_eng_minors_name
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minors_name()
+
+    @app.route('/api/major_id/<major_name>')
+    def retrieve_major_course_id(major_name):
+        """
+        Retrieve major courses as course ids for a given major name
+        Example: localhost:5000/api/major_id/AECHEBASC
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_major_info_course_id(major_name)
 
     @app.route('/api/major/<major_name>')
-    def retrieve_major_from_name(major_name):
+    def retrieve_major_course_name(major_name):
         """
-        Retrieve major courses for a given major name
-        Example: TODO
+        Retrieve major courses as course codes for a given major name
+        Example: localhost:5000/api/major/AECHEBASC
         """
-        return program_dir.get_major_info(major_name)
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_major_info_course_name(major_name)
+
+    @app.route('/api/minor_id/<minor_id>')
+    def retrieve_minor_from_id(minor_id):
+        """
+        Retrieve minor courses as course ids for a given minor name
+        Example: localhost:5000/api/minor_id/AECERAIEN
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minor_info_course_id(minor_id)
 
     @app.route('/api/minor/<minor_name>')
     def retrieve_minor_from_name(minor_name):
         """
-        Retrieve minor courses for a given minor name
-        Example: TODO
+        Retrieve minor courses as course codes for a given minor name
+        Example: localhost:5000/api/minor/AECERAIEN
         """
-        return program_dir.get_minor_info(minor_name)
-    
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minor_info_course_name(minor_name)
+
+    @app.route('/api/eng_minor_id/<eng_minor_id>')
+    def retrieve_eng_minor_from_id(eng_minor_id):
+        """
+        Retrieve engineering minor info for a given minor id
+
+        Returns a minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/eng_minor_id/0
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minor_info_from_id(eng_minor_id)
+
     @app.route('/api/eng_minor/<eng_minor_name>')
     def retrieve_eng_minor_from_name(eng_minor_name):
         """
         Retrieve engineering minor info for a given minor name
-        Example: TODO
+
+        Returns a minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/eng_minor/Artificial Intelligence Engineering
         """
-        return program_dir.get_eng_minor_info(eng_minor_name)
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minor_info_from_name(eng_minor_name)
 
     @app.route('/api/users', methods=['POST', 'GET'])
     def users():
