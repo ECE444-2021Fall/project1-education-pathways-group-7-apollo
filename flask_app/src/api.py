@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask import Flask, render_template, request, redirect, jsonify, json
 import certifi
 import os
+from pathlib import Path
 import simplejson as json
 
 # Load config from a .env file:
@@ -13,7 +14,7 @@ MONGODB_URI = os.environ['MONGODB_URI']
 # Connect to your MongoDB cluster:
 client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 
-from data_utils import SearchInfo, Course, CourseDirectory, Program, ProgramDirectory
+from data_utils import SearchInfo, Course, CourseDirectory, ProgramDirectory
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -24,12 +25,13 @@ def create_app():
         pass
 
     # Load course info
-    # this should work as an absolute path
-    # resources_dir = os.path.join(os.path.join(os.path.join(
-    #     os.path.abspath(__file__), '..'), '..'), "resources")
-    course_dir = CourseDirectory('resources/df_processed.pickle')
-    # TODO: load program info
-    # TODO: load user info
+    course_dir_path = Path(os.path.dirname(os.path.abspath(__file__)))
+    course_dir_path = os.path.join(os.path.join(course_dir_path.parent.absolute(), 'resources'), 'df_processed.pickle')
+
+    # This should work as an absolute path
+    course_dir = CourseDirectory(course_dir_path)
+    # Load program info
+    program_dir = ProgramDirectory(course_dir)
 
     @app.route('/')
     def display_home_info():
@@ -46,7 +48,6 @@ def create_app():
         Retrieve a list of supported search headers and their options
         Example: 127.0.0.1:5000/api/supported_search_headers
         """
-        # TODO: status done, tested, need to write automated test
         return course_dir.get_supported_search_headers()
     
     @app.route('/api/all_courses_id')
@@ -55,7 +56,6 @@ def create_app():
         Retrieve all courses indexed by id
         Example: 127.0.0.1:5000/api/all_courses_id
         """
-        # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_id()
 
     @app.route('/api/all_courses_code')
@@ -64,7 +64,6 @@ def create_app():
         Retrieve all courses indexed by course code
         Example: 127.0.0.1:5000/api/all_courses_code
         """
-        # TODO: status done, tested, need to write automated test
         return course_dir.get_all_courses_code()
 
     @app.route('/api/search/')
@@ -97,8 +96,186 @@ def create_app():
         Retrieve detailed course info for a given course code
         Example: 127.0.0.1:5000/api/course/ECE444H1
         """
-        # TODO: status done, tested, need to write automated test
         return course_dir.get_course_json_from_code(code)
+
+    @app.route('/api/course_id/<course_id>')
+    def retrieve_course_from_id(course_id):
+        """
+        Retrieve detailed course info for a given course id
+        Example: localhost:5000/api/course_id/2
+        """
+        # TODO: status done, tested, need to write automated test
+        return course_dir.get_course_json_from_id(course_id)
+
+    @app.route('/api/all_majors_id')
+    def retrieve_all_majors_id():
+        """
+        Retrieve all major info
+        Example: localhost:5000/api/all_majors_id
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_majors_id()
+
+    @app.route('/api/all_majors_code')
+    def retrieve_all_majors_code():
+        """
+        Retrieve all major info
+        Example: localhost:5000/api/all_majors_code
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_majors_code()
+
+    @app.route('/api/all_minors_id')
+    def retrieve_all_minors_id():
+        """
+        Retrieve all minor info
+        Example: localhost:5000/api/all_minors_id
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minors_id()
+
+    @app.route('/api/all_minors_code')
+    def retrieve_all_minors_code():
+        """
+        Retrieve all minor info
+        Example: localhost:5000/api/all_minors_code
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minors_code()
+
+    @app.route('/api/all_detailed_eng_minors_id')
+    def retrieve_detailed_eng_minors_id():
+        """
+        Retrieve all detailed engineering minor info
+
+        Returns a dictionary of minor_info dictionaries indexed by minor_id
+        minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/all_detailed_eng_minors_id
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minors_id()
+
+    @app.route('/api/all_detailed_eng_minors_name')
+    def retrieve_detailed_eng_minors_name():
+        """
+        Retrieve all detailed engineering minor info
+
+        Returns a dictionary of minor_info dictionaries indexed by minor name
+        minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/all_detailed_eng_minors_name
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minors_name()
+
+    @app.route('/api/major_id/<major_name>')
+    def retrieve_major_course_id(major_name):
+        """
+        Retrieve major courses as course ids for a given major name
+        Example: localhost:5000/api/major_id/AECHEBASC
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_major_info_course_id(major_name)
+
+    @app.route('/api/major/<major_name>')
+    def retrieve_major_course_name(major_name):
+        """
+        Retrieve major courses as course codes for a given major name
+        Example: localhost:5000/api/major/AECHEBASC
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_major_info_course_name(major_name)
+
+    @app.route('/api/minor_id/<minor_id>')
+    def retrieve_minor_from_id(minor_id):
+        """
+        Retrieve minor courses as course ids for a given minor name
+        Example: localhost:5000/api/minor_id/AECERAIEN
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minor_info_course_id(minor_id)
+
+    @app.route('/api/minor/<minor_name>')
+    def retrieve_minor_from_name(minor_name):
+        """
+        Retrieve minor courses as course codes for a given minor name
+        Example: localhost:5000/api/minor/AECERAIEN
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_minor_info_course_name(minor_name)
+
+    @app.route('/api/eng_minor_id/<eng_minor_id>')
+    def retrieve_eng_minor_from_id(eng_minor_id):
+        """
+        Retrieve engineering minor info for a given minor id
+
+        Returns a minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/eng_minor_id/0
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minor_info_from_id(eng_minor_id)
+
+    @app.route('/api/eng_minor/<eng_minor_name>')
+    def retrieve_eng_minor_from_name(eng_minor_name):
+        """
+        Retrieve engineering minor info for a given minor name
+
+        Returns a minor_info dictionary:
+        minor_info = {"Name": "name of minor", "Requirements": {1: ["List of courses", "Course 2"]}}
+        There are 3 keys:
+        "Name" which has the name of the minor as a value
+        "Requirements" which has a list of list of course codes for each
+        requirement group
+        "Requirement Credits" which has a list of dictionaries where key is #
+        of courses required and value is a list of groups that the courses
+        must be from (indexed by 0 according to "Requirements" list indexes)
+        Example: 
+        minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
+        For this example, there must be a total of 6 credits between the
+        requirement groups indexed 0-5
+
+        Example: localhost:5000/api/eng_minor/Artificial Intelligence Engineering
+        """
+        # TODO: status done, tested, need to write automated test
+        return program_dir.get_eng_minor_info_from_name(eng_minor_name)
 
     @app.route('/api/users', methods=['POST', 'GET'])
     def users():
