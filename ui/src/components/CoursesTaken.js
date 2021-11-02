@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { styled, FormControl, Typography, Button } from '@mui/material';
+import { styled } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import axios from 'axios';
 
-const course_codes = [
-    { title: 'Software Enginering', code: 'ECE444' },
-    { title: 'Digital Electronics', code: 'ECE334' }
-  ]
+function createData(code, title) {
+return {
+    code,
+    title
+};
+}
   
 const MainContainer = styled("div")({
     width: '25vw',
@@ -31,12 +34,33 @@ export default function CoursesTaken({ handler }) {
     // Store courses taken
     const [courses_taken, set_courses_taken] = useState([]);
 
+    // This data will be populated from the fetch API
+    const [shownCourses, setShownCourses] = useState([]);
+
+    const fetchCourses = () => {
+        axios.get( "http://localhost:5000/api/all_courses_id")
+        .then((response) => {
+            const courses = [];
+            for (const course in response.data) {
+            courses.push(
+                createData(
+                response.data[course].Code,
+                response.data[course].Name
+                )
+            );
+            }
+            setShownCourses(courses);
+            console.log(setShownCourses);
+        });
+    };
+
+    useEffect(() => fetchCourses(), [])
+
     // New entry for every course taken
     const onChange = (event, value) => {
         set_courses_taken(value);
         handler(value);
     };
-
 
     return (
         <MainContainer>
@@ -45,8 +69,8 @@ export default function CoursesTaken({ handler }) {
                 multiple
                 value={courses_taken}
                 onChange={onChange}
-                options={course_codes}
-                getOptionLabel={(option) => option.title}
+                options={shownCourses}
+                getOptionLabel={(option) => option.code}
                 renderInput={(params) => (
                 <TextField
                     {...params}
