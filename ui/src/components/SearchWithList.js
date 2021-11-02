@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
+import { CoursePlanner } from "./CoursePlanner";
 
 const MainContainer = styled("div")({
   color: "darkslategray",
@@ -44,6 +45,7 @@ const SearchAndCourse = () => {
             <div>The current query is {currentQuery}</div>
             <div>Added courses: {addedCourses}</div>
           </Grid>
+          <CoursePlanner/>
         </Grid>
       </Box>
     </MainContainer>
