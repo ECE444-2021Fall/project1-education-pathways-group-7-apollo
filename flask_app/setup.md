@@ -40,3 +40,8 @@ py -3.8 -m pytest
 
 To test with prints:
 py -3.8 -m  pytest -s
+
+## .env file
+The environment variables used to connect to the mongo container should NOT be shared publicly, as they
+contain passwords. The .env file shall be shared internally and not committed to GitHub.
+

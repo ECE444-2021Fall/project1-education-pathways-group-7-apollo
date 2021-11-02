@@ -4,18 +4,19 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const SearchBar = ({ setCurrentQuery }) => {
+const SearchBar = ({ fetchCourses }) => {
   const [searchInput, setSearchInput] = React.useState("");
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
       <Autocomplete
         freeSolo
-        id="free-solo-2-demo"
+        data-testid="course-search-bar"
         disableClearable
         options={top100Films.map((option) => option.title)}
         renderInput={(params) => (
           <TextField
             {...params}
+            data-testid="course-search-bar-input"
             label="Search input"
             InputProps={{
               ...params.InputProps,
@@ -29,8 +30,7 @@ const SearchBar = ({ setCurrentQuery }) => {
       />
       <Button
         onClick={() => {
-          alert(searchInput);
-          setCurrentQuery(searchInput);
+          fetchCourses(searchInput);
         }}
         variant="contained"
       >
