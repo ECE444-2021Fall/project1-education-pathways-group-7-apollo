@@ -4,25 +4,41 @@ import { useState } from "react"
 import { FormControl, Button, styled, Typography, Select, MenuItem, Alert } from '@mui/material';
 
 export const Login = ({onFormSubmit}) => {
-    // Store username and password to validate
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [invalidCredentialsAlert, setInvalidCredentialsAlert] = useState(false)
 
     // Method for when form is submitted
     const onSubmit = (e) => {
         e.preventDefault()
 
         // Call method to validate user credentials
-        onFormSubmit({ username, password})
+        const result = onFormSubmit(username, password)
 
-        // Reset fields
-        setUsername('')
-        setPassword('')
+        result.then(res => {
+            // If res == true, it means invalid credentials
+            if (res) {
+                setInvalidCredentialsAlert(true)
+    
+                // Reset fields
+                setUsername('')
+                setPassword('')
+            }
+            else {
+                setInvalidCredentialsAlert(false)
+
+                // Reset fields
+                setUsername('')
+                setPassword('')
+            }
+        })
     }
 
     return (
         <div className='login-page-background' style={{position: 'absolute', height: '300vh', width: '100vw', backgroundImage: "url(/app-background.png)" }}>
             <div className='login-main-container'> 
+                {/* Alerts only active when form submission reveals a problem */}
+                {invalidCredentialsAlert && <Alert severity="error">Invalid credentials. Please try again!</Alert>}
                 <form className="login-form" onSubmit={onSubmit}>
                     <div style={{    alignSelf: 'center'    }}>
                                 <img src="/app-logo.png" style={{
