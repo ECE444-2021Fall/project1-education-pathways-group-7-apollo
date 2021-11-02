@@ -7,11 +7,13 @@ import SignUp from "../components/SignUp";
 import { ProgressBar } from "../components/ProgressBar";
 import PersistentDrawerLeft from "../components/SidebarFilters";
 import UserServices from "../components/UserServices";
+import { useLocalStorage } from "../components/useLocalStorage";
 
 function Home() {
-  // State to track information of current logged in user, and whether user is logged in or not
-  const [loggedInUserInfo, setLoggedInUserInfo] = useState({id:'', firstName: '', lastName: ''})
-  const [loggedIn, setLoggedIn] = useState(false)
+  // State to track ID of current logged in user, and whether user is logged in or not
+  // These states will persist over refresh/new tab
+  const [loggedInUserID, setLoggedInUserID] = useLocalStorage("id", "")
+  const [loggedIn, setLoggedIn] = useLocalStorage("loggedIn", false)
 
   // Credential checking in backend for Login component
   const checkCredentials = async (username, password) => {
@@ -35,7 +37,7 @@ function Home() {
 
         // matchedUser.id == null if no user was found
         if (matchedUser.id) {
-          setLoggedInUserInfo({id: matchedUser.id, firstName: matchedUser.firstName, lastName: matchedUser.lastName})
+          setLoggedInUserID(matchedUser.id)
           setLoggedIn(true)
 
           // Let login component know everything's gucci
