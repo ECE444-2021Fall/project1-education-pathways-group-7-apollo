@@ -35,8 +35,13 @@ For now, there is only api testing via postman, make a GET request to any of the
 For example:
 127.0.0.1:5000/api/supported_search_headers
 
+For testing the app, run the following:
+py -3.8 -m pytest
+
+To test with prints:
+py -3.8 -m  pytest -s
+
 ## .env file
 The environment variables used to connect to the mongo container should NOT be shared publicly, as they
 contain passwords. The .env file shall be shared internally and not committed to GitHub.
 
-### TODO: need to implement unit tests and integration tests
