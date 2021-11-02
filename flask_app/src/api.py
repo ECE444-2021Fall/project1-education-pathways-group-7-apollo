@@ -3,7 +3,6 @@ from pymongo import MongoClient
 from datetime import datetime
 from flask_cors import CORS
 from flask import Flask, render_template, request, redirect, jsonify, json
-
 import certifi
 import os
 from pathlib import Path
@@ -339,7 +338,38 @@ def create_app():
                 dataJson.append(dataDict)
             print(dataJson)
             return jsonify(dataJson)
+    
+    @app.route('/api/authenticate', methods=['POST'])
+    def authenticate():
+        """
+        Check that username and password match an existing user
+        """
+        db = client['user_management']
+        request_body = json.loads(request.get_json()['body'])
 
+        email = request_body['username']
+        password = request_body['password']
+
+        matching_user = list(db['registration'].find({'email': email, 'password': password}))
+
+        # Returning the below is equivalent to "no user found"
+        dataDict = {"id": None}
+
+        # No matching user will result in [], otherwise, it'll be a [dict()]
+        if matching_user:
+            user = matching_user[0]
+            id = user['_id']
+            firstName = user['firstName']
+            lastName = user['lastName']
+            dataDict = {
+                'id': str(id),
+                "firstName": firstName,
+                "lastName": lastName
+            }
+
+        response = jsonify(dataDict)
+        return response
+    
     return app
 
 # Open files

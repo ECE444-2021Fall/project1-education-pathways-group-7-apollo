@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const USER_API_BASE_URL = "http://localhost:5000/api/users";
+const API_BASE_URL = "http://localhost:5000/api";
 
 class UserService {
 
@@ -22,6 +23,10 @@ class UserService {
 
     deleteUser(userId){
         return axios.delete(USER_API_BASE_URL + '/' + userId);
+    }
+
+    authenticateUser(payload){
+        return axios.post(API_BASE_URL + '/authenticate', payload)
     }
 }
 
