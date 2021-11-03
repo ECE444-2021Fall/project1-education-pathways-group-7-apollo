@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
+import PersistentDrawerLeft from "./SidebarFilters";
 
 function createData(code, title, fac, desc, avg, offerings) {
   return {
@@ -22,6 +23,7 @@ const MainContainer = styled("div")({
   backgroundColor: "aliceblue",
   padding: 8,
   borderRadius: 4,
+  marginTop: 60,
 });
 
 const SearchAndCourse = () => {
@@ -32,9 +34,19 @@ const SearchAndCourse = () => {
   // The actual array used for rendering
   const [addedCourses, setAddedCourses] = React.useState([]);
 
-  const fetchCourses = React.useCallback(async (query) => {
+  const fetchCourses = React.useCallback(async (query, year, campus, dept) => {
+    if (year === "Any") {
+      year = "";
+    }
+    if (campus === "Any") {
+      campus = "";
+    }
+    const searchField = `?search_field=${query}&search_filters=`;
+    const filters = `{"Campus" : "${campus}", "Course Level" : "${year}"}`;
+    // Example: 127.0.0.1:5000/api/search/?search_field=software&search_filters={"Campus" : "St. George", "Course Level" : "4", "Department" : "Edward S. Rogers Sr. Dept. of Electrical %26 Computer Engin.", "Division" : "Faculty of Applied Science %26 Engineering", "Term": "2022 Winter" }
+    console.log(searchField + filters);
     const { data } = await axios.get(
-      "http://localhost:5000/api/all_courses_id"
+      `http://localhost:5000/api/search/${searchField}${filters}`
     );
     const rows = [];
     for (const course in data) {
@@ -53,31 +65,25 @@ const SearchAndCourse = () => {
   });
 
   return (
-    <MainContainer>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={8}>
-            <SearchBar
-              fetchCourses={fetchCourses}
-            />
+    <>
+      <PersistentDrawerLeft fetchCourses={fetchCourses} />
+      <MainContainer>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={8}>
+              <CourseList
+                shownCourses={shownCourses}
+                addedCoursesMap={addedCoursesMap}
+                setAddedCoursesMap={setAddedCoursesMap}
+                addedCourses={addedCourses}
+                setAddedCourses={setAddedCourses}
+              />
+              <div>Added courses: {addedCourses}</div>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={8}>
-            <CourseList
-              shownCourses={shownCourses}
-              addedCoursesMap={addedCoursesMap}
-              setAddedCoursesMap={setAddedCoursesMap}
-              addedCourses={addedCourses}
-              setAddedCourses={setAddedCourses}
-            />
-            <div>Added courses: {addedCourses}</div>
-          </Grid>
-        </Grid>
-      </Box>
-    </MainContainer>
+        </Box>
+      </MainContainer>
+    </>
   );
 };
 
