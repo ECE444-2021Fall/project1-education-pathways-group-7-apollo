@@ -4,6 +4,7 @@ import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/
 import { FormErrors } from './FormErrors';
 import UserService from './UserServices';
 import CoursesTaken from "./CoursesTaken";
+import Major from "./Major";
 
 const year = [
     {label: '1', value: '1'},
@@ -66,7 +67,8 @@ class SignUp extends Component {
         } 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
-        this.handler = this.handler.bind(this)
+        this.handleMajor = this.handleMajor.bind(this)
+        this.handleCourses = this.handleCourses.bind(this)
     }
 
     // Modify state  of field based on user input
@@ -75,12 +77,19 @@ class SignUp extends Component {
             () => { this.validateField(e.target.name, e.target.value) })
     }
 
+    // saves major into state array
+    handleMajor(major) {
+        this.setState({
+          major: major  
+        })
+    }
+
     // saves courses taken into state array
-    handler(courses) {
+    handleCourses(courses) {
         this.setState({
           courses_taken: courses  
         })
-      }
+    }
 
     // Validate form and create a new user
     onSubmit (e) {
@@ -256,23 +265,7 @@ class SignUp extends Component {
                             value={this.state.confirm_password}
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
-                        <TextField
-                            style={{
-                                position: 'relative',
-                                fontFamily: 'Bodoni Moda',
-                                width: '25vw',
-                                alignSelf: 'center',
-                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
-                            }}
-                            data-testid="major-input"
-                            label="Major"
-                            variant="filled"
-                            required
-                            name="major"
-                            placeholder="Please Enter Your Major"
-                            value={this.state.major}
-                            onChange={this.onChange} />
+                        <Major handleMajor={this.handleMajor} />
                         <Select 
                             style={{
                                 position: 'relative',
@@ -296,7 +289,7 @@ class SignUp extends Component {
                                 <MenuItem value={option.value}>{option.label}</MenuItem>
                             ))}
                         </Select>
-                        <CoursesTaken handler={this.handler} />
+                        <CoursesTaken handleCourses={this.handleCourses} />
                         <Button 
                             style={{
                                 fontFamily: 'Bodoni Moda',
