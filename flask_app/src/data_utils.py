@@ -565,8 +565,8 @@ class ProgramDirectory():
         minor_info = {}
         minor_info["Name"] = "Nanoengineering"
         minor_info["Requirements"] = [["MSE219H1"]]
-        minor_info["Requirements"].append(["Nanoengineering related Thesis/Capstone"])
-        minor_info["Requirements"].append(["BME346H1S", "ECE330H1S", "ECE335H1F", "ECE350H1S", "PHY358H1S"])
+        minor_info["Requirements"].append(["APS490Y1"])
+        minor_info["Requirements"].append(["BME346H1", "ECE330H1", "ECE335H1", "ECE350H1", "PHY358H1"])
         minor_info["Requirements"].append(["BME440H1", "CHE475H1", "CHE562H1", "CHM325H1", "CHM328H1", "CHM338H1", "ECE427H1", "FOR424H1", "MSE430H1", "MSE443H1", "MSE438H1", "MSE459H1", "MSE462H1", "MSE451H1", "MSE458H1", "MIE506H1", "MIE517H1", "PHY427H1", "PHY450H1", "PHY452H1", "PHY456H1", "PHY485H1", "PHY487H1"])
         minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {0: [2]}, {4: [2, 3]}, {2: [3]}]
         idx = len(self.eng_minors_id)
@@ -751,3 +751,40 @@ class ProgramDirectory():
         if eng_minor_name not in self.eng_minors_name.keys():
             return {}
         return self.eng_minors_name[eng_minor_name]
+    
+    def get_recommended_courses(self, major_name, minor_name, courses_taken):
+        """
+        Input:
+        major : major_name
+        minor : minor_name
+        courses_taken : [list, of, courses, by, course code]
+
+        Output:
+        recommended_courses : [list, of, courses, by, course code]
+        """        
+        # No suggested courses, return all course codes
+        if major_name == None and minor_name == None:
+            return {"recommended_courses" : self.course_dir.get_all_courses_code().keys()}
+
+        rec_courses = set()
+        # Get courses from major
+        if major_name in self.major_code.keys():
+            rec_courses.update(self.major_code[major_name])
+
+        # Get courses from minor
+        if minor_name in self.minor_code.keys():
+            rec_courses.update(self.minor_code[minor_name])
+        
+        if minor_name in self.eng_minors_name.keys():
+            eng_minor_info = self.eng_minors_name[minor_name]
+            for group in eng_minor_info["Requirements"]:
+                rec_courses.update(group)
+        
+        # Remove courses that they already took
+        for c in courses_taken:
+            if c in rec_courses:
+                rec_courses.remove(c)
+
+        rec_courses = list(rec_courses)
+        rec_courses.sort()
+        return {"recommended_courses": rec_courses}

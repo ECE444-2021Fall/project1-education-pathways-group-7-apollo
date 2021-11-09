@@ -276,6 +276,42 @@ def create_app():
         """
         # TODO: status done, tested, need to write automated test
         return program_dir.get_eng_minor_info_from_name(eng_minor_name)
+    
+    @app.route('/api/recommended_courses', methods=['GET'])
+    def get_recommended_courses():
+        """
+        Retrieve a list of recommended course given user's major/minor and
+        taken courses
+
+        Input:
+        major : major_name
+        minor : minor_name
+        courses_taken : [list, of, courses, by, course code]
+
+        Output:
+        recommended_courses : [list, of, courses, by, course code]
+
+        Example: localhost:5000/api/recommended_courses?major_name=""&courses_taken=["AER525H1"]&minor_name=Advanced Manufacturing
+        """
+        # TODO: test and write automated tests
+
+        req_args = request.args
+        if "major_name" not in req_args.keys():
+            major_name = None
+        else:
+            major_name = req_args["major_name"]
+        if "minor_name" not in req_args.keys():
+            minor_name = None
+        else:
+            minor_name = req_args["minor_name"]
+        if "courses_taken" not in req_args.keys():
+            courses_taken = []
+        else:
+            courses_taken = req_args["courses_taken"].strip(']["').split(', ')
+
+
+        return program_dir.get_recommended_courses(major_name, minor_name, courses_taken)
+
 
     @app.route('/api/users', methods=['POST', 'GET'])
     def users():
