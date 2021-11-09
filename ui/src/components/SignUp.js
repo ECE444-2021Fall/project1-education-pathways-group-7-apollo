@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
 import { FormErrors } from './FormErrors';
+import { Link } from "@reach/router";
 import UserService from './UserServices';
 import CoursesTaken from "./CoursesTaken";
 import Major from "./Major";
+import Minor from "./Minor";
 
 const year = [
     {label: '1', value: '1'},
@@ -58,16 +60,19 @@ class SignUp extends Component {
             password: '',
             confirm_password: '',
             major: '',
+            minor: '',
             year: '',
             courses_taken: [],
             formErrors: {email: '', password: ''},
             emailValid: false,
             passwordValid: false,
-            formValid: false
+            formValid: false,
+            registered: false
         } 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.handleMajor = this.handleMajor.bind(this)
+        this.handleMinor = this.handleMinor.bind(this)
         this.handleCourses = this.handleCourses.bind(this)
     }
 
@@ -81,6 +86,13 @@ class SignUp extends Component {
     handleMajor(major) {
         this.setState({
           major: major  
+        })
+    }
+
+    // saves minor into state array
+    handleMinor(minor) {
+        this.setState({
+          minor: minor  
         })
     }
 
@@ -101,6 +113,7 @@ class SignUp extends Component {
             email: this.state.email,
             password: this.state.password,
             major: this.state.major,
+            minor: this.state.minor,
             year: this.state.year,
             courses_taken: this.state.courses_taken
         }
@@ -108,6 +121,10 @@ class SignUp extends Component {
         UserService.createUser(newUser)
         .then(res => { console.log(res.data); })
         .catch(err => console.log(err.response.data));
+
+        this.setState({
+            registered: true,
+          });
     }
 
     // Valid a UofT email is used and validate that password is not too short
@@ -135,16 +152,14 @@ class SignUp extends Component {
     }
 
     validateForm() {
-    this.setState({formValid: this.state.emailValid && this.state.passwordValid});
+        this.setState({formValid: this.state.emailValid && this.state.passwordValid});
     }
 
     errorClass(error) {
-    return(error.length === 0 ? '' : 'has-error');
+        return(error.length === 0 ? '' : 'has-error');
     }
 
     render () {
-
-
         return (         
             <>
             <Background>
@@ -186,10 +201,11 @@ class SignUp extends Component {
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
                             data-testid="first-name-input"
                             label="First Name"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="first_name"
                             placeholder="Enter First Name"
@@ -202,11 +218,12 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
                             data-testid="last-name-input"
                             label="Last Name"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="last_name"
                             placeholder="Enter Last Name"
@@ -219,11 +236,12 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
                             data-testid="email-input"
                             label="Email"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="email"
                             placeholder="Enter Email"
@@ -236,12 +254,13 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
                             data-testid="password-input"
                             type="password"
                             label="Password"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="password"
                             placeholder="Enter Password"
@@ -254,19 +273,22 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
                             data-testid="confirm-password-input"
                             type="password"
                             label="Confirm Password"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="confirm_password"
                             value={this.state.confirm_password}
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
                         <Major handleMajor={this.handleMajor} />
+                        <Minor handleMinor={this.handleMajor} />
                         <Select 
+                            placeholder="Year"
                             style={{
                                 position: 'relative',
                                 alignSelf: 'center',
@@ -275,12 +297,13 @@ class SignUp extends Component {
                                 fontSize: "100%",
                                 marginTop: '1vh',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                backgroundColor:'#e1e0e0'
                             }}
                             name="year" 
                             required
                             value={this.state.year} 
                             onChange={this.onChange}
-                            variant='filled'
+                            variant='outlined'
                             >
                             <MenuItem disabled value={0}>
                                 Select Year
@@ -310,7 +333,12 @@ class SignUp extends Component {
                             className="btn btn-lg btn-primary btn-block"
                             disabled={!this.state.formValid}
                             onClick={this.onSubmit}>
-                            Sign Up
+                            <Link 
+                                style={{
+                                    fontFamily: 'Bodoni Moda',
+                                    color: '#696969',
+                                }}
+                                to="/login">SignUp</Link>
                         </Button>
                     </FormControl>
                 </MainContainer>

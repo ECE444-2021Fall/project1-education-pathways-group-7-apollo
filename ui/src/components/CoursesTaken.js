@@ -19,7 +19,7 @@ const MainContainer = styled("div")({
     borderRadius: 5,
     marginTop: '1vh',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-    
+    backgroundColor:'#e1e0e0',
 
     '& .MuiTextField-root': {
     margin: 5,
@@ -74,7 +74,7 @@ export default function CoursesTaken({ handleCourses }) {
                 renderInput={(params) => (
                 <TextField
                     {...params}
-                    variant="standard"
+                    variant="outlined"
                     label="Select Previously Taken Courses"
                     placeholder="Select Course"
                 />
