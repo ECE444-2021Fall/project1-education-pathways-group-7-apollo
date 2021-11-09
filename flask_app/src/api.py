@@ -289,6 +289,7 @@ def create_app():
             email = body['email'] 
             password = body['password']
             major = body['major']
+            minor = body['minor']
             year = body['year']
             coursesTaken = body['courses_taken']
             # db.users.insert_one({
@@ -298,6 +299,7 @@ def create_app():
                 "email": email,
                 "password": password,
                 "major": major,
+                "minor": minor,
                 "year": year,
                 "coursesTaken": coursesTaken
             })
@@ -308,6 +310,7 @@ def create_app():
                 'email': email,
                 "password": password,
                 "major": major,
+                "minor": minor,
                 "year": year,
                 "coursesTaken": coursesTaken
             })
@@ -323,6 +326,7 @@ def create_app():
                 email = data['email'] 
                 password = data['password']
                 major = data['major']
+                minor = data['minor']
                 year = data['year']
                 coursesTaken = data['coursesTaken']
                 dataDict = {
@@ -332,6 +336,7 @@ def create_app():
                     "email": email,
                     "password": password,
                     "major": major,
+                    "minor": minor,
                     "year": year,
                     "coursesTaken": coursesTaken
                 }

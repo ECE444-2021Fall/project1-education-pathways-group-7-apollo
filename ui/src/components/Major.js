@@ -12,6 +12,7 @@ const MainContainer = styled("div")({
     borderRadius: 5,
     marginTop: '1vh',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    backgroundColor:'#e1e0e0',
     
 
     '& .MuiTextField-root': {
@@ -60,7 +61,8 @@ export default function CoursesTaken({ handleMajor }) {
                 renderInput={(params) => (
                 <TextField
                     {...params}
-                    variant="standard"
+                    required
+                    variant="outlined"
                     label="Major"
                     placeholder="Select Major"
                 />
