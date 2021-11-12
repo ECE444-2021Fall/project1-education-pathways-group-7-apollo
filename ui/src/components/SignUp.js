@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
 import { FormErrors } from './FormErrors';
-import { Link } from "@reach/router";
+import { Redirect } from "@reach/router";
 import UserService from './UserServices';
 import CoursesTaken from "./CoursesTaken";
 import Major from "./Major";
@@ -67,7 +67,7 @@ class SignUp extends Component {
             emailValid: false,
             passwordValid: false,
             formValid: false,
-            registered: false
+            redirect: null
         } 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -122,9 +122,7 @@ class SignUp extends Component {
         .then(res => { console.log(res.data); })
         .catch(err => console.log(err.response.data));
 
-        this.setState({
-            registered: true,
-          });
+        this.setState({ redirect: "/" });
     }
 
     // Valid a UofT email is used and validate that password is not too short
@@ -160,7 +158,10 @@ class SignUp extends Component {
     }
 
     render () {
-        return (         
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
+        return(
             <>
             <Background>
                 <MainContainer sx={{ boxShadow: 3 }}>               
@@ -333,12 +334,7 @@ class SignUp extends Component {
                             className="btn btn-lg btn-primary btn-block"
                             disabled={!this.state.formValid}
                             onClick={this.onSubmit}>
-                            <Link 
-                                style={{
-                                    fontFamily: 'Bodoni Moda',
-                                    color: '#696969',
-                                }}
-                                to="/">SignUp</Link>
+                            Sign Up
                         </Button>
                     </FormControl>
                 </MainContainer>
