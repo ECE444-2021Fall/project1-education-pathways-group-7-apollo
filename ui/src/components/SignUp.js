@@ -286,7 +286,7 @@ class SignUp extends Component {
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
                         <Major handleMajor={this.handleMajor} />
-                        <Minor handleMinor={this.handleMajor} />
+                        <Minor handleMinor={this.handleMinor} />
                         <Select 
                             placeholder="Year"
                             style={{
@@ -338,7 +338,7 @@ class SignUp extends Component {
                                     fontFamily: 'Bodoni Moda',
                                     color: '#696969',
                                 }}
-                                to="/login">SignUp</Link>
+                                to="/">SignUp</Link>
                         </Button>
                     </FormControl>
                 </MainContainer>

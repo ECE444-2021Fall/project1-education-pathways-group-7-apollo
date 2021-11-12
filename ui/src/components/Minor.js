@@ -35,30 +35,44 @@ export default function CoursesTaken({ handleMinor }) {
     useEffect(async () => {
         let engMinors = [];
         let minorCodes = [];
-        const fetchEngMinors = () => {
-            axios.get("http://localhost:5000/api/all_detailed_eng_minors_name")
+        const fetchEngMinors = async () => {
+            let engMinorsList = []
+            await axios.get("http://localhost:5000/api/all_detailed_eng_minors_name")
             .then((response) => {
                 const minors = [];
                 for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
                     minors.push(Object.keys(response.data)[i]);
                 }
-                engMinors = minors;
+                engMinorsList = minors
             });
+            return engMinorsList
         };
-        const fetchMinorCodes= () => {
-            axios.get( "http://localhost:5000/api/all_minors_id")
+        const fetchMinorCodes= async () => {
+            let minorCodesList = []
+            await axios.get( "http://localhost:5000/api/all_minors_id")
             .then((response) => {
                 const minors = [];
                 for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
                     minors.push(Object.keys(response.data)[i]);
                 }
-                minorCodes = minors;
+                minorCodesList = minors;
             });
+            return minorCodesList
         };
-        fetchEngMinors();
-        fetchMinorCodes();
-        const allMinors = engMinors.concat(minorCodes);
-        setShownAllMinors(allMinors);
+
+        fetchEngMinors()
+          .then(response => {
+            engMinors = response
+            fetchMinorCodes()
+              .then(response => {
+                minorCodes = response
+
+                const allMinors = engMinors.concat(minorCodes);
+                setShownAllMinors(allMinors);
+              })
+              .catch(error => console.error(error))
+          })
+          .catch(error => console.error(error))
     }, [])
 
     // New entry for every course taken

@@ -20,6 +20,7 @@ import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { SearchBar } from "./SearchBar";
+import Logout from "./Logout";
 
 const filters = ["Course Year", "Division/Department", "Campus"];
 
@@ -137,6 +138,10 @@ export default function PersistentDrawerLeft(props) {
           >
             <SearchIcon />
           </IconButton>
+          {/* Add a logout button here */}
+          <div style={{"marginLeft": 'auto'}}>
+            <Logout />
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
