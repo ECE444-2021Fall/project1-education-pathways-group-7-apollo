@@ -29,40 +29,37 @@ export default function CoursesTaken({ handleMinor }) {
     const [minor, setMinor] = useState('');
 
     // This data will be populated from the fetch API
-    const [shownMinorsCodes, setShownMinorsCodes] = useState([]);
-    const [shownEngMinors, setShownEngMinors] = useState([]);
     const [shownAllMinors, setShownAllMinors] = useState([]);
 
-    const fetchMinorCodes= () => {
-        axios.get( "http://localhost:5000/api/all_minors_id")
-        .then((response) => {
-            const minors = [];
-            for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
-                minors.push(Object.keys(response.data)[i]);
-            }
-            setShownMinorsCodes(minors);
-        });
 
-    };
-
-    const fetchEngMinors= () => {
-        axios.get("http://localhost:5000/api/all_detailed_eng_minors_name")
-        .then((response) => {
-            const minors = [];
-            for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
-                minors.push(Object.keys(response.data)[i]);
-            }
-            setShownEngMinors(minors);
-        });
-    };
-
-    useEffect(() => fetchMinorCodes(), [])
-    useEffect(() => fetchEngMinors(), [])
-
-    useEffect(() => {
-        const allMinors = shownMinorsCodes.concat(shownEngMinors);
+    useEffect(async () => {
+        let engMinors = [];
+        let minorCodes = [];
+        const fetchEngMinors = () => {
+            axios.get("http://localhost:5000/api/all_detailed_eng_minors_name")
+            .then((response) => {
+                const minors = [];
+                for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
+                    minors.push(Object.keys(response.data)[i]);
+                }
+                engMinors = minors;
+            });
+        };
+        const fetchMinorCodes= () => {
+            axios.get( "http://localhost:5000/api/all_minors_id")
+            .then((response) => {
+                const minors = [];
+                for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
+                    minors.push(Object.keys(response.data)[i]);
+                }
+                minorCodes = minors;
+            });
+        };
+        fetchEngMinors();
+        fetchMinorCodes();
+        const allMinors = engMinors.concat(minorCodes);
         setShownAllMinors(allMinors);
-    }, [shownMinorsCodes, shownEngMinors, shownAllMinors])
+    }, [])
 
     // New entry for every course taken
     const onChange = (event, value) => {
