@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
 import PersistentDrawerLeft from "./SidebarFilters";
+import { ProgressBar } from "./ProgressBar";
 
 function createData(code, title, fac, desc, avg, offerings) {
   return {
@@ -26,7 +27,8 @@ const MainContainer = styled("div")({
   marginTop: 60,
 });
 
-const SearchAndCourse = () => {
+// userID prop is Mongo's generated user ID
+const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
   // This data will be populated from the fetch API
   const [shownCourses, setShownCourses] = React.useState([]);
   // Used to prevent duplicates
@@ -83,6 +85,7 @@ const SearchAndCourse = () => {
           </Grid>
         </Box>
       </MainContainer>
+      <ProgressBar userInfo={userInfo} addedCourses={addedCourses} majorCourses={majorCourses} minorsRequirements={minorsRequirements}/>
     </>
   );
 };

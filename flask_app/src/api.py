@@ -398,15 +398,23 @@ def create_app():
 
         # No matching user will result in [], otherwise, it'll be a [dict()]
         if matching_user:
-            user = matching_user[0]
-            id = user['_id']
-            firstName = user['firstName']
-            lastName = user['lastName']
+            data = matching_user[0]
+            id = data['_id']
+            firstName = data['firstName']
+            lastName = data['lastName']
+            major = data['major']
+            minor = data['minor']
+            year = data['year']
+            coursesTaken = data['coursesTaken']
             dataDict = {
-                'id': str(id),
-                "firstName": firstName,
-                "lastName": lastName
-            }
+                    'id': str(id),
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "major": major,
+                    "minor": minor,
+                    "year": year,
+                    "coursesTaken": coursesTaken
+                }
 
         response = jsonify(dataDict)
         return response

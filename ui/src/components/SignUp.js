@@ -287,7 +287,7 @@ class SignUp extends Component {
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
                         <Major handleMajor={this.handleMajor} />
-                        <Minor handleMinor={this.handleMajor} />
+                        <Minor handleMinor={this.handleMinor} />
                         <Select 
                             placeholder="Year"
                             style={{
