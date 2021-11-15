@@ -7,6 +7,8 @@ import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
 import PersistentDrawerLeft from "./SidebarFilters";
 import { ProgressBar } from "./ProgressBar";
+import MajorCoursesDisplay from "./MajorCoursesDisplay";
+import MinorCoursesDisplay from "./MinorCoursesDisplay";
 
 function createData(code, title, fac, desc, avg, offerings) {
   return {
@@ -86,6 +88,14 @@ const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
         </Box>
       </MainContainer>
       <ProgressBar userInfo={userInfo} addedCourses={addedCourses} majorCourses={majorCourses} minorsRequirements={minorsRequirements}/>
+      <br/>
+      <span style={{display: "flex"}}>
+        <MajorCoursesDisplay userInfo={userInfo} addedCourses={addedCourses} majorCourses={majorCourses}/>
+        {/* I apologize for how whack the line of code below is. But hey, it worked*/}
+        {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
+        <MinorCoursesDisplay userInfo={userInfo} addedCourses={addedCourses} minorsRequirements={minorsRequirements}/>
+      </span>
+      
     </>
   );
 };
