@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
+import { CoursePlanner } from "./CoursePlanner";
 import PersistentDrawerLeft from "./SidebarFilters";
 import { ProgressBar } from "./ProgressBar";
 import MajorCoursesDisplay from "./MajorCoursesDisplay";
@@ -84,6 +85,7 @@ const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
               />
               <div>Added courses: {addedCourses}</div>
             </Grid>
+            <CoursePlanner/>
           </Grid>
         </Box>
       </MainContainer>
