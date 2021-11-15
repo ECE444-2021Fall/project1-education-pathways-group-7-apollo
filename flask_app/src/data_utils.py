@@ -290,6 +290,9 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
         return
 
     def get_course_df(self):
+        """
+        Return course info pandas dataframe
+        """
         return self.df_processed
 
     def get_headers(self):
@@ -349,7 +352,7 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
         """
         For a given course code, return course json
         """
-        course_id = int(course_id)
+        course_id = str(course_id)
         if course_id not in self.courses.keys():
             # No course id found
             return {}
@@ -406,6 +409,8 @@ class ProgramDirectory():
         major_code = {}
         minor_id = {}
         minor_code = {}
+        # For every course, add the majors/minors to the major/minor info
+        # data structures
         for index, row in self.course_df.iterrows():
             mjr = row["MajorsOutcomes"]
             mnr = row["MinorsOutcomes"]
@@ -453,6 +458,7 @@ class ProgramDirectory():
         # "Requirement Credits" which has a list of dictionaries where key is #
         # of courses required and value is a list of groups that the courses
         # must be from (indexed by 0 according to "Requirements" list indexes)
+
         # Example: 
         # minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
         # For this example, there must be a total of 6 credits between the
