@@ -85,7 +85,9 @@ const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
               />
               <div>Added courses: {addedCourses}</div>
             </Grid>
-            <CoursePlanner/>
+            <CoursePlanner
+              addedCourses={addedCourses}
+            />
           </Grid>
         </Box>
       </MainContainer>

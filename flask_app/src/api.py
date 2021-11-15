@@ -418,7 +418,98 @@ def create_app():
 
         response = jsonify(dataDict)
         return response
-    
+
+    @app.route('/api/courseplanner', methods=['POST', 'GET'])
+    def courseplanner():
+        db = client['user_management']
+
+            # POST a data to database
+        if request.method == 'POST':
+            body = request.json
+            firstName = body['first_name']
+            lastName = body['last_name']
+            schoolYear = body['school_year']
+            term = body['term']
+            courses = body['courses'] 
+            # db.users.insert_one({
+            db['planner'].insert_one({
+                "firstName": firstName,
+                "lastName": lastName,
+                "schoolYear": schoolYear,
+                "term": term,
+                "courses": courses,
+            })
+            return jsonify({
+                'status': 'Data is posted to MongoDB!',
+                "firstName": firstName,
+                "lastName": lastName,
+                "schoolYear": schoolYear,
+                "term": term,
+                "courses": courses,
+            })
+        
+        # GET all data from database
+        if request.method == 'GET':
+            allData = db['planner'].find()
+            dataJson = []
+            for data in allData:
+                id = data['_id']
+                firstName = data['firstName']
+                lastName = data['lastName']
+                schoolYear = data['school_year']
+                term = data['term']
+                courses = data['courses'] 
+                dataDict = {
+                    'id': str(id),
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "schoolYear": schoolYear,
+                    "term": term,
+                    "courses": courses,
+                }
+                dataJson.append(dataDict)
+            print(dataJson)
+            return jsonify(dataJson)
+
+    @app.route('/api/auth', methods=['POST'])
+    def auth():
+        """
+        Check that username and password match an existing user
+        """
+        db = client['user_management']
+        request_body = json.loads(request.get_json()['body'])
+
+        email = request_body['username']
+        password = request_body['password']
+
+        matching_user = list(db['registration'].find({'email': email, 'password': password}))
+
+        # Returning the below is equivalent to "no user found"
+        dataDict = {"id": None}
+
+        # No matching user will result in [], otherwise, it'll be a [dict()]
+        if matching_user:
+            data = matching_user[0]
+            id = data['_id']
+            firstName = data['firstName']
+            lastName = data['lastName']
+            major = data['major']
+            minor = data['minor']
+            year = data['year']
+            coursesTaken = data['coursesTaken']
+            dataDict = {
+                    'id': str(id),
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "major": major,
+                    "minor": minor,
+                    "year": year,
+                    "coursesTaken": coursesTaken
+                }
+
+        response = jsonify(dataDict)
+        return response
+
     return app
 
 # Open files

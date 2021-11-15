@@ -10,27 +10,31 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateTwo = (props) => {
+    const savePlanner = async ()
     return(
         <>
             <List component={Stack} direction="row">
                 <ListItem>
-                        <ListItemText>ECE444</ListItemText>
+                        <ListItemText>{props.addCourses[0]}</ListItemText>
                     </ListItem>
                     <Divider orientation="vertical" flexItem></Divider>
                     <ListItem>
-                        <ListItemText>ECE421</ListItemText>
+                        <ListItemText>{props.addCourses[1]}</ListItemText>
                     </ListItem>
                     <Divider orientation="vertical" flexItem></Divider>
                     <ListItem>
-                        <ListItemText>ECE320</ListItemText>
+                        <ListItemText>{props.addCourses[2]}</ListItemText>
                     </ListItem>
                     <Divider orientation="vertical" flexItem></Divider>
                     <ListItem>
-                        <ListItemText>ECE320</ListItemText>
+                        <ListItemText>{props.addCourses[3]}</ListItemText>
                     </ListItem>
                     <Divider orientation="vertical" flexItem></Divider>
                     <ListItem>
-                        <ListItemText>ECE320</ListItemText>
+                        <ListItemText>{props.addCourses[4]}</ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText>{props.addedCourses[5]}</ListItemText>
                     </ListItem>
             </List>
         <br></br>

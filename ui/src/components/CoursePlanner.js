@@ -7,7 +7,7 @@ import {StateZero} from "./CoursePlannerStateZero";
 import {StateOne} from "./CoursePlannerStateOne";
 import {StateTwo} from "./CoursePlannerStateTwo";
 
-export function CoursePlanner() {
+export const CoursePlanner = ({addedCourses}) => {
 
   const [step, setStep] = useState(0);
 
@@ -43,6 +43,7 @@ export function CoursePlanner() {
         {step === 2 ? (
           <StateTwo
             prev={prevStep}
+            addCourses={addedCourses}
           />
         ) : null}
       </Box>
