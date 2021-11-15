@@ -1,21 +1,20 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const SearchBar = ({ setCurrentQuery }) => {
-  const [searchInput, setSearchInput] = React.useState("");
+const SearchBar = ({ setSearchInput }) => {
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
       <Autocomplete
         freeSolo
-        id="free-solo-2-demo"
+        data-testid="course-search-bar"
         disableClearable
-        options={top100Films.map((option) => option.title)}
+        options={autoCompleteOptions.map((option) => option.title)}
         renderInput={(params) => (
           <TextField
             {...params}
+            data-testid="course-search-bar-input"
             label="Search input"
             InputProps={{
               ...params.InputProps,
@@ -27,24 +26,10 @@ const SearchBar = ({ setCurrentQuery }) => {
           />
         )}
       />
-      <Button
-        onClick={() => {
-          alert(searchInput);
-          setCurrentQuery(searchInput);
-        }}
-        variant="contained"
-      >
-        Go!
-      </Button>
     </Stack>
   );
 };
 
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-const top100Films = [
-  { title: "ECE444" },
-  { title: "APS100" },
-  { title: "ECE244" },
-];
+const autoCompleteOptions = [];
 
 export { SearchBar };

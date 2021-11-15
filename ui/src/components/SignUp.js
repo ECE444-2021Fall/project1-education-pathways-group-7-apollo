@@ -1,24 +1,12 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router"
 import { TextField } from '@material-ui/core';
 import { FormControl, Button, styled, Typography, Select, MenuItem } from '@mui/material';
-import axios from 'axios';
 import { FormErrors } from './FormErrors';
-
-const register = newUser => {
-    return axios
-        .post("users/signup", {
-            first_name: newUser.first_name,
-            last_name: newUser.last_name,
-            email: newUser.email,
-            password: newUser.password,
-            major: newUser.major,
-            year: newUser.year
-        })
-        .then(response => {
-            console.log("User Signed Up Successfully!")
-        })
-}
+import { Redirect } from "@reach/router";
+import UserService from './UserServices';
+import CoursesTaken from "./CoursesTaken";
+import Major from "./Major";
+import Minor from "./Minor";
 
 const year = [
     {label: '1', value: '1'},
@@ -72,14 +60,20 @@ class SignUp extends Component {
             password: '',
             confirm_password: '',
             major: '',
+            minor: '',
             year: '',
+            courses_taken: [],
             formErrors: {email: '', password: ''},
             emailValid: false,
             passwordValid: false,
-            formValid: false
+            formValid: false,
+            redirect: null
         } 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.handleMajor = this.handleMajor.bind(this)
+        this.handleMinor = this.handleMinor.bind(this)
+        this.handleCourses = this.handleCourses.bind(this)
     }
 
     // Modify state  of field based on user input
@@ -88,31 +82,47 @@ class SignUp extends Component {
             () => { this.validateField(e.target.name, e.target.value) })
     }
 
+    // saves major into state array
+    handleMajor(major) {
+        this.setState({
+          major: major  
+        })
+    }
+
+    // saves minor into state array
+    handleMinor(minor) {
+        this.setState({
+          minor: minor  
+        })
+    }
+
+    // saves courses taken into state array
+    handleCourses(courses) {
+        this.setState({
+          courses_taken: courses  
+        })
+    }
+
     // Validate form and create a new user
     onSubmit (e) {
         e.preventDefault()
-
-        const { password } = this.state.password;
-        const { confirm_password } = this.state.confirm_password;
-
-        if (password !== confirm_password) {
-            alert("Passwords don't match!");
-        } else {
-            const newUser = {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                password: this.state.password,
-                confirm_password: this.state.confirm_password,
-                major: this.state.major,
-                year: this.state.year
-            }
-
-            register(newUser).then(res => {
-                this.props.history.push(`/login`)
-            })
+    
+        const newUser = {
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            email: this.state.email,
+            password: this.state.password,
+            major: this.state.major,
+            minor: this.state.minor,
+            year: this.state.year,
+            courses_taken: this.state.courses_taken
         }
 
+        UserService.createUser(newUser)
+        .then(res => { console.log(res.data); })
+        .catch(err => console.log(err.response.data));
+
+        this.setState({ redirect: "/" });
     }
 
     // Valid a UofT email is used and validate that password is not too short
@@ -140,17 +150,18 @@ class SignUp extends Component {
     }
 
     validateForm() {
-    this.setState({formValid: this.state.emailValid && this.state.passwordValid});
+        this.setState({formValid: this.state.emailValid && this.state.passwordValid});
     }
 
     errorClass(error) {
-    return(error.length === 0 ? '' : 'has-error');
+        return(error.length === 0 ? '' : 'has-error');
     }
 
     render () {
-
-
-        return (         
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
+        return(
             <>
             <Background>
                 <MainContainer sx={{ boxShadow: 3 }}>               
@@ -191,9 +202,11 @@ class SignUp extends Component {
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                                 borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
+                            data-testid="first-name-input"
                             label="First Name"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="first_name"
                             placeholder="Enter First Name"
@@ -206,10 +219,12 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
+                            data-testid="last-name-input"
                             label="Last Name"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="last_name"
                             placeholder="Enter Last Name"
@@ -222,10 +237,12 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
+                            data-testid="email-input"
                             label="Email"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="email"
                             placeholder="Enter Email"
@@ -238,11 +255,13 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
+                            data-testid="password-input"
                             type="password"
                             label="Password"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="password"
                             placeholder="Enter Password"
@@ -255,33 +274,22 @@ class SignUp extends Component {
                                 width: '25vw',
                                 alignSelf: 'center',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
+                                borderRadius: '5%',
+                                backgroundColor:'#e1e0e0'
                             }}
+                            data-testid="confirm-password-input"
                             type="password"
                             label="Confirm Password"
-                            variant="filled"
+                            variant="outlined"
                             required
                             name="confirm_password"
                             value={this.state.confirm_password}
                             placeholder="Confirm Password"
                             onChange={this.onChange} />
-                        <TextField
-                            style={{
-                                position: 'relative',
-                                fontFamily: 'Bodoni Moda',
-                                width: '25vw',
-                                alignSelf: 'center',
-                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                                borderRadius: '5%'
-                            }}
-                            label="Major"
-                            variant="filled"
-                            required
-                            name="major"
-                            placeholder="Please Enter Your Major"
-                            value={this.state.major}
-                            onChange={this.onChange} />
+                        <Major handleMajor={this.handleMajor} />
+                        <Minor handleMinor={this.handleMinor} />
                         <Select 
+                            placeholder="Year"
                             style={{
                                 position: 'relative',
                                 alignSelf: 'center',
@@ -290,13 +298,13 @@ class SignUp extends Component {
                                 fontSize: "100%",
                                 marginTop: '1vh',
                                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                backgroundColor:'#e1e0e0'
                             }}
                             name="year" 
                             required
                             value={this.state.year} 
                             onChange={this.onChange}
-                            label="year"
-                            variant='filled'
+                            variant='outlined'
                             >
                             <MenuItem disabled value={0}>
                                 Select Year
@@ -305,6 +313,7 @@ class SignUp extends Component {
                                 <MenuItem value={option.value}>{option.label}</MenuItem>
                             ))}
                         </Select>
+                        <CoursesTaken handleCourses={this.handleCourses} />
                         <Button 
                             style={{
                                 fontFamily: 'Bodoni Moda',
@@ -323,15 +332,9 @@ class SignUp extends Component {
                             variant="contained"
                             type="submit"  
                             className="btn btn-lg btn-primary btn-block"
-                            disabled={!this.state.formValid}>
-                            <Link
-                                style={{
-                                position: 'relative',
-                                fontFamily: 'Bodoni Moda',
-                                color: '#f7f6f6',
-                                alignSelf: 'center',
-                                }}
-                                to="courses-taken">Sign Up</Link>
+                            disabled={!this.state.formValid}
+                            onClick={this.onSubmit}>
+                            Sign Up
                         </Button>
                     </FormControl>
                 </MainContainer>

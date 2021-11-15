@@ -177,7 +177,7 @@ function Row(props) {
                 <TableBody>
                   <TableRow>
                     <TableCell>{row.avg}</TableCell>
-                    <TableCell>{row.offerings}</TableCell>
+                    <TableCell>{row.offerings.join(", ")}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -189,28 +189,20 @@ function Row(props) {
   );
 }
 
-const rows = [
-  createData(
-    "ECE444",
-    "Software Engineering",
-    "Applied Science and Engineering",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "B",
-    ["Fall 2022, Winter 2022"]
-  ),
-  createData("ECE100", "Orientation to ECE", "Applied Science and Engineering"),
-  createData("ECE496", "Capstone", "Applied Science and Engineering"),
-];
-
 const CourseList = (props) => {
-  const { setAddedCourses, addedCourses, addedCoursesMap, setAddedCoursesMap } =
-    props;
+  const {
+    setAddedCourses,
+    addedCourses,
+    addedCoursesMap,
+    setAddedCoursesMap,
+    shownCourses,
+  } = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shownCourses.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -220,6 +212,7 @@ const CourseList = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   return (
     <TableStyle>
       <TableContainer component={Paper}>
@@ -229,16 +222,16 @@ const CourseList = (props) => {
               <TableCell />
               <TableCell align="left">Course Code</TableCell>
               <TableCell align="left">Title</TableCell>
-              <TableCell align="left">Faculty</TableCell>
+              <TableCell align="left">Department</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
+              ? shownCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : shownCourses
             ).map((row) => (
               <Row
-                key={row.name}
+                key={row.code}
                 row={row}
                 addedCourses={addedCourses}
                 setAddedCourses={setAddedCourses}
@@ -255,9 +248,9 @@ const CourseList = (props) => {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25]}
                 colSpan={3}
-                count={rows.length}
+                count={shownCourses.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
@@ -269,6 +262,7 @@ const CourseList = (props) => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 ActionsComponent={TablePaginationActions}
+                sx={{ overflow: 'visible'}}
               />
             </TableRow>
           </TableFooter>

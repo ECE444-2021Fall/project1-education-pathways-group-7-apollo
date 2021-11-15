@@ -5,13 +5,6 @@ import { styled } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
 
-function createData(code, title) {
-return {
-    code,
-    title
-};
-}
-  
 const MainContainer = styled("div")({
     width: '25vw',
     textAlign: 'left',
@@ -20,6 +13,7 @@ const MainContainer = styled("div")({
     marginTop: '1vh',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     backgroundColor:'#e1e0e0',
+    
 
     '& .MuiTextField-root': {
     margin: 5,
@@ -30,53 +24,47 @@ const MainContainer = styled("div")({
     },
 });
 
-export default function CoursesTaken({ handleCourses }) {
-    // Store courses taken
-    const [courses_taken, set_courses_taken] = useState([]);
+export default function CoursesTaken({ handleMajor }) {
+    // Store Major
+    const [major, set_major] = useState('');
 
     // This data will be populated from the fetch API
-    const [shownCourses, setShownCourses] = useState([]);
+    const [shownMajors, setShownMajors] = useState([]);
 
-    const fetchCourses = () => {
-        axios.get( "http://localhost:5000/api/all_courses_id")
+    const fetchMajors = () => {
+        axios.get( "http://localhost:5000/api/all_majors_id")
         .then((response) => {
-            const courses = [];
-            for (const course in response.data) {
-            courses.push(
-                createData(
-                response.data[course].Code,
-                response.data[course].Name
-                )
-            );
+            const majors = [];
+            for (var i = 0; i < Object.keys(response.data).length; i = i + 1) {
+                majors.push(Object.keys(response.data)[i]);
             }
-            setShownCourses(courses);
-            console.log(setShownCourses);
+            setShownMajors(majors);
         });
     };
 
-    useEffect(() => fetchCourses(), [])
+    useEffect(() => fetchMajors(), [])
 
     // New entry for every course taken
     const onChange = (event, value) => {
-        set_courses_taken(value);
-        handleCourses(value);
+        set_major(value);
+        handleMajor(value);
     };
 
     return (
         <MainContainer>
             <Stack>
             <Autocomplete
-                multiple
-                value={courses_taken}
+                value={major}
                 onChange={onChange}
-                options={shownCourses}
-                getOptionLabel={(option) => option.code}
+                options={shownMajors}
+                getOptionLabel={(option) => option}
                 renderInput={(params) => (
                 <TextField
                     {...params}
+                    required
                     variant="outlined"
-                    label="Select Previously Taken Courses"
-                    placeholder="Select Course"
+                    label="Major"
+                    placeholder="Select Major"
                 />
                 )}
             />
