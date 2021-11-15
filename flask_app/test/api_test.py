@@ -5,7 +5,6 @@ api_path = Path(os.path.dirname(os.path.abspath(__file__)))
 api_path = os.path.join(api_path.parent.absolute(), 'src')
 sys.path.insert(0, api_path)
 import api
-import data_utils
 import pytest
 import json
 import random

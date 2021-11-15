@@ -352,7 +352,7 @@ Science Breadth': nan, 'Arts and Science Distribution': nan, 'Later term course 
         """
         For a given course code, return course json
         """
-        course_id = int(course_id)
+        course_id = str(course_id)
         if course_id not in self.courses.keys():
             # No course id found
             return {}

@@ -30,9 +30,10 @@ py -3.8 src/api.py
 
 ## Testing
 
-For now, there is only api testing via postman, make a GET request to any of the APIs after running the app.
+Testing can be done via postman after running the app,
+or can run automated tests as specified:
 
-For example:
+For example, postman:
 127.0.0.1:5000/api/supported_search_headers
 
 For testing the app, run the following:
