@@ -17,6 +17,10 @@ client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 from data_utils import SearchInfo, Course, CourseDirectory, ProgramDirectory
 
 def create_app():
+    """
+    Main function to create flask app and load in information from course pickle
+    or user MongoDB cluster
+    """
     app = Flask(__name__, instance_relative_config=True)
     CORS(app)
     try:
@@ -32,15 +36,6 @@ def create_app():
     course_dir = CourseDirectory(course_dir_path)
     # Load program info
     program_dir = ProgramDirectory(course_dir)
-
-    @app.route('/')
-    def display_home_info():
-        """
-        Return home page info
-        Example: 127.0.0.1:5000/
-        """
-        # TODO: don't need this
-        return "Hello World!"
 
     @app.route('/api/supported_search_headers')
     def retrieve_supported_search_headers():
@@ -94,6 +89,9 @@ def create_app():
     def retrieve_course(code):
         """
         Retrieve detailed course info for a given course code
+
+        Output format is a dictionary with {header : info} fields
+
         Example: 127.0.0.1:5000/api/course/ECE444H1
         """
         return course_dir.get_course_json_from_code(code)
@@ -102,6 +100,11 @@ def create_app():
     def retrieve_course_from_id(course_id):
         """
         Retrieve detailed course info for a given course id
+
+        Output format is a dictionary with {id : {course_info}}
+        where course_info is the course info dictionary with {header : info}
+        fields
+
         Example: localhost:5000/api/course_id/2
         """
         # TODO: status done, tested, need to write automated test
@@ -111,6 +114,10 @@ def create_app():
     def retrieve_all_majors_id():
         """
         Retrieve all major info
+
+        Output format is a dictionary with 
+        key, value: {major_name : [list of courses by id]}
+
         Example: localhost:5000/api/all_majors_id
         """
         # TODO: status done, tested, need to write automated test
@@ -120,6 +127,10 @@ def create_app():
     def retrieve_all_majors_code():
         """
         Retrieve all major info
+
+        Output format is a dictionary with 
+        key, value: {major_name : [list of courses by course code]}
+
         Example: localhost:5000/api/all_majors_code
         """
         # TODO: status done, tested, need to write automated test
@@ -129,6 +140,10 @@ def create_app():
     def retrieve_all_minors_id():
         """
         Retrieve all minor info
+
+        Output format is a dictionary with 
+        key, value: {minor_name : [list of courses by course id]}
+
         Example: localhost:5000/api/all_minors_id
         """
         # TODO: status done, tested, need to write automated test
@@ -138,6 +153,10 @@ def create_app():
     def retrieve_all_minors_code():
         """
         Retrieve all minor info
+
+        Output format is a dictionary with 
+        key, value: {minor_name : [list of courses by course code]}
+
         Example: localhost:5000/api/all_minors_code
         """
         # TODO: status done, tested, need to write automated test
@@ -158,6 +177,7 @@ def create_app():
         "Requirement Credits" which has a list of dictionaries where key is #
         of courses required and value is a list of groups that the courses
         must be from (indexed by 0 according to "Requirements" list indexes)
+
         Example: 
         minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
         For this example, there must be a total of 6 credits between the
@@ -183,6 +203,7 @@ def create_app():
         "Requirement Credits" which has a list of dictionaries where key is #
         of courses required and value is a list of groups that the courses
         must be from (indexed by 0 according to "Requirements" list indexes)
+
         Example: 
         minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
         For this example, there must be a total of 6 credits between the
@@ -197,6 +218,9 @@ def create_app():
     def retrieve_major_course_id(major_name):
         """
         Retrieve major courses as course ids for a given major name
+
+        Output if valid is a dictionary: {major : [list of course ids]}
+
         Example: localhost:5000/api/major_id/AECHEBASC
         """
         # TODO: status done, tested, need to write automated test
@@ -206,6 +230,9 @@ def create_app():
     def retrieve_major_course_name(major_name):
         """
         Retrieve major courses as course codes for a given major name
+
+        Output if valid is a dictionary: {major : [list of course codes]}
+
         Example: localhost:5000/api/major/AECHEBASC
         """
         # TODO: status done, tested, need to write automated test
@@ -215,6 +242,9 @@ def create_app():
     def retrieve_minor_from_id(minor_id):
         """
         Retrieve minor courses as course ids for a given minor name
+
+        Output if valid is a dictionary: {minor : [list of course ids]}
+
         Example: localhost:5000/api/minor_id/AECERAIEN
         """
         # TODO: status done, tested, need to write automated test
@@ -224,6 +254,9 @@ def create_app():
     def retrieve_minor_from_name(minor_name):
         """
         Retrieve minor courses as course codes for a given minor name
+
+        Output if valid is a dictionary: {minor : [list of course codes]}
+
         Example: localhost:5000/api/minor/AECERAIEN
         """
         # TODO: status done, tested, need to write automated test
@@ -243,6 +276,7 @@ def create_app():
         "Requirement Credits" which has a list of dictionaries where key is #
         of courses required and value is a list of groups that the courses
         must be from (indexed by 0 according to "Requirements" list indexes)
+
         Example: 
         minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
         For this example, there must be a total of 6 credits between the
@@ -267,6 +301,7 @@ def create_app():
         "Requirement Credits" which has a list of dictionaries where key is #
         of courses required and value is a list of groups that the courses
         must be from (indexed by 0 according to "Requirements" list indexes)
+
         Example: 
         minor_info["Requirement Credits"] = [{1 : [0]}, {1: [1]}, {1: [2]}, {1 : [3]}, {1: [4]}, {6: [0,1,2,3,4,5]}]
         For this example, there must be a total of 6 credits between the
@@ -315,6 +350,10 @@ def create_app():
 
     @app.route('/api/users', methods=['POST', 'GET'])
     def users():
+        """
+        Manages user info when retrieving, registering, or updating user info
+        onto MongoDB
+        """
         db = client['user_management']
 
         # POST a data to database
