@@ -74,7 +74,6 @@ export default function CoursesTaken({ handleCourses }) {
                 renderInput={(params) => (
                 <TextField
                     {...params}
-                    variant="outlined"
                     label="Select Previously Taken Courses"
                     placeholder="Select Course"
                 />

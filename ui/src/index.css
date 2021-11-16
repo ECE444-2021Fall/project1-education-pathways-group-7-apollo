@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+.login-have-account {
+  color: black;
+  text-align: center;
+}
+
 .login-create-account {
   padding-top: 20px;
   text-align: center;
@@ -47,7 +52,6 @@ code {
 
 .login-main-container MuiTextField-root {
   margin: 5;
-  width: 300vh;
   }
 
   .login-main-container MuiButtonBase-root {

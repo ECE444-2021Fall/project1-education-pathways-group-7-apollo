@@ -92,24 +92,11 @@ function Home() {
 
   return (
     <>
-      <nav>
-        <Link to="/">Home</Link>
-        {"  "}
-        <Link to="login">Login</Link>
-        {"  "}
-        <Link to="signup">SignUp</Link>
-        {"  "}
-        <Link to="password-recovery">ForgotPassword</Link>
-
-        <Link to="sidebar-filters">SidebarFilters</Link>
-        {"  "}
-        <Link to="progress-bar">ProgressBar</Link>
-      </nav>
       <Router>
         {/* Display login page if user is not logged in  */}
         {loggedIn ? <SearchAndCourse path="/" userInfo={userState} majorCourses={majorCourses} minorsRequirements={minorsRequirements}/> : <Login path="/" onFormSubmit={checkCredentials} />}
-        {/* <SearchAndCourse path="/" />
-        <Login path="/login" onFormSubmit={checkCredentials} /> */}
+        {/* <SearchAndCourse path="/" /> */}
+        <Login path="/login" onFormSubmit={checkCredentials} />
         <SignUp path="/signup" />
         <ProgressBar path="/progress-bar" />
         <PersistentDrawerLeft path="/sidebar-filters" />

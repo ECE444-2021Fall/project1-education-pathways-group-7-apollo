@@ -24,7 +24,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 
 const TableStyle = styled("div")({
-  width: "50%",
+  width: "100%",
 });
 
 function TablePaginationActions(props) {
@@ -96,17 +96,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(code, title, fac, desc, avg, offerings) {
-  return {
-    code,
-    title,
-    fac,
-    desc,
-    avg,
-    offerings,
-  };
-}
-
 function Row(props) {
   const {
     row,
@@ -173,11 +162,15 @@ function Row(props) {
                 <TableRow>
                   <TableCell>Course Average</TableCell>
                   <TableCell>Offerings</TableCell>
+                  <TableCell>Campus</TableCell>
+                  <TableCell>Pre-requisites</TableCell>
                 </TableRow>
                 <TableBody>
                   <TableRow>
                     <TableCell>{row.avg}</TableCell>
                     <TableCell>{row.offerings.join(", ")}</TableCell>
+                    <TableCell>{row.campus}</TableCell>
+                    <TableCell>{row.prereqs.join(", ")}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -215,59 +208,71 @@ const CourseList = (props) => {
 
   return (
     <TableStyle>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell align="left">Course Code</TableCell>
-              <TableCell align="left">Title</TableCell>
-              <TableCell align="left">Department</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? shownCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : shownCourses
-            ).map((row) => (
-              <Row
-                key={row.code}
-                row={row}
-                addedCourses={addedCourses}
-                setAddedCourses={setAddedCourses}
-                addedCoursesMap={addedCoursesMap}
-                setAddedCoursesMap={setAddedCoursesMap}
-              />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+      <div>
+        <h1>Course List</h1>
+      </div>
+      {shownCourses.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell align="left">Course Code</TableCell>
+                <TableCell align="left">Title</TableCell>
+                <TableCell align="left">Department</TableCell>
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                colSpan={3}
-                count={shownCourses.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-                sx={{ overflow: 'visible'}}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? shownCourses.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : shownCourses
+              ).map((row) => (
+                <Row
+                  key={row.code}
+                  row={row}
+                  addedCourses={addedCourses}
+                  setAddedCourses={setAddedCourses}
+                  addedCoursesMap={addedCoursesMap}
+                  setAddedCoursesMap={setAddedCoursesMap}
+                />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  colSpan={3}
+                  count={shownCourses.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                  sx={{ overflow: "visible" }}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      ) : (
+        <div>
+          <h3>No courses to display. Try searching for courses from the top left icon!</h3>
+        </div>
+      )}
     </TableStyle>
   );
 };
