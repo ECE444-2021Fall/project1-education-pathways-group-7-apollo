@@ -10,6 +10,7 @@ export const StateZero = (props) => {
 
   const Click = (value) => {
     setSelected(value)
+    console.log(value)
    };   
 
 

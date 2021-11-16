@@ -7,7 +7,7 @@ import { StateZero } from "./CoursePlannerStateZero";
 import { StateOne } from "./CoursePlannerStateOne";
 import { StateTwo } from "./CoursePlannerStateTwo";
 
-export function CoursePlanner({addedCourses}) {
+export function CoursePlanner({addedCourses, deleteCourse}) {
   const [step, setStep] = useState(0);
 
   const nextStep = () => {
@@ -18,13 +18,17 @@ export function CoursePlanner({addedCourses}) {
     if (step !== 0) setStep((prev) => prev - 1);
   };
 
+  const deleteCourseTwo = (currentCourse) => {
+    deleteCourse(currentCourse)
+  }
+  console.log('CoursePlanner.js', deleteCourse)
   return (
     <div>
       <Box>
         <h1>Course Planner</h1>
         {step === 0 ? <StateZero next={nextStep} /> : null}
         {step === 1 ? <StateOne next={nextStep} prev={prevStep} /> : null}
-        {step === 2 ? <StateTwo prev={prevStep} addCourses={addedCourses}/> : null} 
+        {step === 2 ? <StateTwo prev={prevStep} addedCourses={addedCourses} deleteCourse={deleteCourseTwo}/> : null} 
       </Box>
     </div>
   );

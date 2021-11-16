@@ -40,6 +40,21 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
   // The actual array used for rendering
   const [addedCourses, setAddedCourses] = React.useState([]);
 
+  const deleteCourse = (currentCourse) => {
+    setAddedCourses(currentCourse)
+  }
+
+  /*const [course, setCourses] = React.useState([])
+
+  const deleteCourse = (course) => {
+    setCourses(prev => {
+      const newCourses = prev.filter(oldCourse => oldCourse !== course)
+      return newCourses
+    })
+  }*/
+
+
+
   const fetchCourses = React.useCallback(async (query, year, campus, dept) => {
     if (year === "Any") {
       year = "";
@@ -88,7 +103,10 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <CoursePlanner addedCourses={addedCourses}/>
+              <CoursePlanner 
+              addedCourses={addedCourses}
+              deleteCourse={deleteCourse}
+              />
             </Grid>
             <Grid item xs={6}>
               <ProgressBar
