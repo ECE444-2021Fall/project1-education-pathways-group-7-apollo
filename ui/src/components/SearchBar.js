@@ -15,7 +15,7 @@ const SearchBar = ({ setSearchInput }) => {
           <TextField
             {...params}
             data-testid="course-search-bar-input"
-            label="Search input"
+            label="Search"
             InputProps={{
               ...params.InputProps,
               type: "search",

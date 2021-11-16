@@ -92,7 +92,7 @@ export const ProgressBar = ({userInfo, addedCourses, majorCourses, minorsRequire
         <div style={{paddingTop: "20px"}}>
             <Card variant="outlined" style={{width: "49vw", backgroundColor: "#f7f6f6", paddingLeft: "10px", borderRadius: "10px"}}>
                 <Typography 
-                    style={{fontSize: "150%",textAlign: 'left',paddingBottom: '1vh',fontWeight: '500',color: 'black'}}
+                    style={{fontSize: "150%",textAlign: 'left',paddingBottom: '1vh',fontWeight: 'bold',color: 'black'}}
                     variant="h1" 
                     component="h2">
                         Degree Requirements Progress

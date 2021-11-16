@@ -10,7 +10,7 @@ import { ProgressBar } from "./ProgressBar";
 import MajorCoursesDisplay from "./MajorCoursesDisplay";
 import MinorCoursesDisplay from "./MinorCoursesDisplay";
 
-function createData(code, title, fac, desc, avg, offerings) {
+function createData(code, title, fac, desc, avg, offerings, campus, prereqs) {
   return {
     code,
     title,
@@ -18,6 +18,8 @@ function createData(code, title, fac, desc, avg, offerings) {
     desc,
     avg,
     offerings,
+    campus,
+    prereqs,
   };
 }
 
@@ -61,7 +63,9 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
           data[course].Department,
           data[course]["Course Description"],
           data[course]["Average Grade"],
-          data[course].Term
+          data[course].Term,
+          data[course].Campus,
+          data[course]["Pre-requisites"]
         )
       );
     }
