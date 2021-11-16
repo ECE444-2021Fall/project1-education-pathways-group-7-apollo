@@ -3,7 +3,6 @@ import axios from "axios";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { SearchBar } from "./SearchBar";
 import { CourseList } from "./CourseList";
 import { CoursePlanner } from "./CoursePlanner";
 import PersistentDrawerLeft from "./SidebarFilters";
@@ -31,7 +30,7 @@ const MainContainer = styled("div")({
 });
 
 // userID prop is Mongo's generated user ID
-const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
+const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
   // This data will be populated from the fetch API
   const [shownCourses, setShownCourses] = React.useState([]);
   // Used to prevent duplicates
@@ -75,7 +74,7 @@ const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
       <MainContainer>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               <CourseList
                 shownCourses={shownCourses}
                 addedCoursesMap={addedCoursesMap}
@@ -83,21 +82,39 @@ const SearchAndCourse = ({userInfo, majorCourses, minorsRequirements}) => {
                 addedCourses={addedCourses}
                 setAddedCourses={setAddedCourses}
               />
-              <div>Added courses: {addedCourses}</div>
             </Grid>
-            <CoursePlanner/>
+            <Grid item xs={6}>
+              <CoursePlanner />
+            </Grid>
+            <Grid item xs={6}>
+              <ProgressBar
+                userInfo={userInfo}
+                addedCourses={addedCourses}
+                majorCourses={majorCourses}
+                minorsRequirements={minorsRequirements}
+              />
+            </Grid>
+          </Grid>
+          <Grid sx={{ paddingTop: "20px" }} container spacing={2}>
+            <Grid item xs={3}>
+              <MajorCoursesDisplay
+                userInfo={userInfo}
+                addedCourses={addedCourses}
+                majorCourses={majorCourses}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <MinorCoursesDisplay
+                userInfo={userInfo}
+                addedCourses={addedCourses}
+                minorsRequirements={minorsRequirements}
+              />
+            </Grid>
           </Grid>
         </Box>
       </MainContainer>
-      <ProgressBar userInfo={userInfo} addedCourses={addedCourses} majorCourses={majorCourses} minorsRequirements={minorsRequirements}/>
-      <br/>
-      <span style={{display: "flex"}}>
-        <MajorCoursesDisplay userInfo={userInfo} addedCourses={addedCourses} majorCourses={majorCourses}/>
-        {/* I apologize for how whack the line of code below is. But hey, it worked*/}
-        {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
-        <MinorCoursesDisplay userInfo={userInfo} addedCourses={addedCourses} minorsRequirements={minorsRequirements}/>
-      </span>
-      
+
+      <br />
     </>
   );
 };

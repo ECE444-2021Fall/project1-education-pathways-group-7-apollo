@@ -7,7 +7,7 @@ function IndividualProgressBar({type, name, progressAmount}) {
         <>
             <br/>
            <Typography 
-                style={{fontFamily: 'Bodoni Moda',fontSize: "120%",textAlign: 'left',paddingBottom: '1vh',fontWeight: '500',color: 'black'}}
+                style={{fontSize: "120%",textAlign: 'left',paddingBottom: '1vh',fontWeight: '500',color: 'black'}}
                 variant="h1" 
                 component="h2">
                     {type}: {name}

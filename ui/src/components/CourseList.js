@@ -24,7 +24,8 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 
 const TableStyle = styled("div")({
-  width: "50%",
+  paddingTop: "20px",
+  width: "100%",
 });
 
 function TablePaginationActions(props) {
