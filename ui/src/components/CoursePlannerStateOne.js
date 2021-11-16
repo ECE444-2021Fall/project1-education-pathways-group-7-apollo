@@ -5,12 +5,20 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateOne = (props) => {
+  const categories = ['Fall', 'Winter', 'Summer']
+
+  const [selected, setSelected] = useState('');
+
+  const Click = (value) => {
+    setSelected(value)
+   };   
+
   return(
     <> 
     <h3>Select a study term!</h3>
-    <Button size="medium" variant="contained" disableElevation>Fall</Button> &nbsp;
-    <Button size="medium" variant="contained" disableElevation>Winter</Button> &nbsp;
-    <Button size="medium" variant="contained" disableElevation>Summer</Button> &nbsp;
+      {categories.map(category => {
+        return <Button onClick={()=>{Click(category)}} variant={selected === category ? 'contained':'outlined'}>{category}</Button>
+      })}
     <br></br>
     <br></br>
     <Button size="small" variant="text" disableElevation onClick={props.prev}>Back</Button>

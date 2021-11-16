@@ -10,7 +10,6 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateTwo = (props) => {
-    const savePlanner = async ()
     return(
         <>
             <List component={Stack} direction="row">
