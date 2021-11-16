@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "@reach/router";
 import { TextField } from "@material-ui/core";
 import {
   FormControl,
@@ -36,7 +37,6 @@ const MainContainer = styled("div")({
   justifyContent: "center",
   alignContent: "center",
   marginLeft: "35vw",
-  fontFamily: "Bodoni Moda",
   fontsize: "10vh",
   fontWeight: "bold",
   backgroundColor: "#f7f6f6",
@@ -369,6 +369,13 @@ class SignUp extends Component {
                 Sign Up
               </Button>
             </FormControl>
+            <div className="login-have-account">
+              <footer>
+                <Typography sx>
+                  Already have an account? <Link to="/">Sign in</Link>{" "}
+                </Typography>
+              </footer>
+            </div>
           </MainContainer>
         </Background>
       </>
