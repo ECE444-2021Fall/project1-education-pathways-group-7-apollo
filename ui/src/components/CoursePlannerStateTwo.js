@@ -10,31 +10,13 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateTwo = (props) => {
+
     return(
         <>
             <List component={Stack} direction="row">
-                <ListItem>
-                        <ListItemText>{props.addCourses[0]}</ListItemText>
-                    </ListItem>
-                    <Divider orientation="vertical" flexItem></Divider>
-                    <ListItem>
-                        <ListItemText>{props.addCourses[1]}</ListItemText>
-                    </ListItem>
-                    <Divider orientation="vertical" flexItem></Divider>
-                    <ListItem>
-                        <ListItemText>{props.addCourses[2]}</ListItemText>
-                    </ListItem>
-                    <Divider orientation="vertical" flexItem></Divider>
-                    <ListItem>
-                        <ListItemText>{props.addCourses[3]}</ListItemText>
-                    </ListItem>
-                    <Divider orientation="vertical" flexItem></Divider>
-                    <ListItem>
-                        <ListItemText>{props.addCourses[4]}</ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText>{props.addedCourses[5]}</ListItemText>
-                    </ListItem>
+                {props.addedCourses.map((currentCourse) => {
+                    return <ListItem>{currentCourse}</ListItem>;
+                })}
             </List>
         <br></br>
         <Button size="small" variant="text" disableElevation onClick={props.prev}>Back</Button>

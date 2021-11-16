@@ -88,7 +88,7 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <CoursePlanner />
+              <CoursePlanner addedCourses={addedCourses}/>
             </Grid>
             <Grid item xs={6}>
               <ProgressBar
