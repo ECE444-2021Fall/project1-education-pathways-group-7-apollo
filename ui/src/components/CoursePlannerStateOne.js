@@ -12,6 +12,7 @@ export const StateOne = (props) => {
   const clickOne = (value) => {
     setSelectedOne(value)
     props.clickOne(value)
+
    };   
 
   return(

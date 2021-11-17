@@ -13,37 +13,18 @@ import CoursePlannerServices from "../services/CoursePlannerServices";
 
 export const StateTwo = (props) => {
     // Copy the addedcourses array. We'll modify this copy until the user decides to save
-    const copyOfAddedCourses = [...props.addedCourses]
-
-    const email = props.userState["email"]
-    const year = props.selectedZero
-    const term = props.selectedOne
-    const user = { "email": email, "year": year, "semester": term }
-
-    //const [request_complete, setRequest] = useState(false);
-
-    //const prevPlanner = (user) => {
-    CoursePlannerServices.getCoursePlannerByID(user)
-    .then(response => {
-       ///console.log("HELLO HELLO HELLO", response.data)
-            //setRequest(true)
-        const courseLists = response.data
-        if (courseLists.courses.length>-1){
-            props.setCourse(courseLists.courses)
-        }
-        //console.log(props.addedCourses)
-        })
-    .catch(err => {
-        console.error("Previous planner not found", err)
-    })
-
+    
+    const [copyOfAddedCourses, setcopyofAddedCourses] = useState([...props.addedCourses]);
     //}
+    console.log("COMPONENT RERENDERING", [...props.addedCourses], copyOfAddedCourses)
+
+    useEffect(() => { setcopyofAddedCourses([...props.addedCourses])}, [])
 
     //useEffect(() => {
       //  prevPlanner();
       //}, [])
 
-    const savePlanner = (copyOfAddedCourses) => {
+    const savePlanner = () => {
         const email = props.userState["email"]
         const year = props.selectedZero
         const term = props.selectedOne
@@ -63,7 +44,7 @@ export const StateTwo = (props) => {
         })
     };
 
-    const deleteCourse = (copyOfAddedCourses, currentCourse) => {
+    const deleteCourse = (currentCourse) => {
 
         const tempAddedCourses = copyOfAddedCourses
 
@@ -74,6 +55,8 @@ export const StateTwo = (props) => {
                 }
             }
         }
+        
+        setcopyofAddedCourses(tempAddedCourses)
        
     };
 

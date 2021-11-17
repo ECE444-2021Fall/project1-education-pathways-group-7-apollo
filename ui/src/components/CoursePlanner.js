@@ -6,6 +6,8 @@ import { styled } from "@mui/material/styles";
 import { StateZero } from "./CoursePlannerStateZero";
 import { StateOne } from "./CoursePlannerStateOne";
 import { StateTwo } from "./CoursePlannerStateTwo";
+import CoursePlannerServices from "../services/CoursePlannerServices";
+import { useLocalStorage } from "../components/useLocalStorage";
 
 export function CoursePlanner({addedCourses, setCourse, userInfo}) {
   const [step, setStep] = useState(0);
@@ -13,6 +15,30 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
   const [selectedZero, setSelectedZero] = useState('');
 
   const [selectedOne, setSelectedOne] = useState('');
+
+
+  const prevPlanner = async () => {
+    const email = userInfo["email"]
+    const year = selectedZero
+    const term = selectedOne
+    const user = { "email": email, "year": year, "semester": term }
+
+    //const [request_complete, setRequest] = useState(false);
+  
+    await CoursePlannerServices.getCoursePlannerByID(user)
+    .then(response => {
+        ///console.log("HELLO HELLO HELLO", response.data)
+            //setRequest(true)
+        const courseLists = response.data
+        if (courseLists.courses.length>-1){
+            localStorage.setItem(`${year}${term}`, courseLists.courses)
+        }
+        //console.log(props.addedCourses)
+        })
+    .catch(err => {
+        console.error("Previous planner not found", err)
+      })
+  };
 
   const clickZero = (value) => {
     setSelectedZero(value) 
@@ -23,7 +49,13 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
    };  
 
   const nextStep = () => {
-    if (step !== 2) setStep((prev) => prev + 1);
+    if (step===1) {
+      prevPlanner()
+      .then(() => {setStep((prev) => prev + 1)} )
+    }
+    else{
+      if (step !== 2) setStep((prev) => prev + 1);
+    }
   };
 
   const prevStep = () => {
