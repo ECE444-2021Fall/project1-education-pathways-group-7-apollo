@@ -12,6 +12,8 @@ import { styled } from '@mui/material/styles';
 import CoursePlannerServices from "../services/CoursePlannerServices";
 
 export const StateTwo = (props) => {
+    // Copy the addedcourses array. We'll modify this copy until the user decides to save
+    const copyOfAddedCourses = [...props.addedCourses]
 
     const email = props.userState["email"]
     const year = props.selectedZero
@@ -41,11 +43,11 @@ export const StateTwo = (props) => {
       //  prevPlanner();
       //}, [])
 
-    const savePlanner = () => {
+    const savePlanner = (copyOfAddedCourses) => {
         const email = props.userState["email"]
         const year = props.selectedZero
         const term = props.selectedOne
-        const courseList = props.addedCourses
+        const courseList = copyOfAddedCourses
 
         const body = { email: email, year: year, term: term, courses: courseList }
 
@@ -54,15 +56,16 @@ export const StateTwo = (props) => {
         CoursePlannerServices.saveCoursePlanner(body)
         .then(response => { 
             console.log("Planner is saved!", response)
+            props.setCourse(copyOfAddedCourses)
         })
         .catch(err => {
             console.error("Planner not saved", err)
         })
     };
 
-    const deleteCourse = (currentCourse) => {
+    const deleteCourse = (copyOfAddedCourses, currentCourse) => {
 
-        const tempAddedCourses = [...props.addedCourses];
+        const tempAddedCourses = copyOfAddedCourses
 
         if (tempAddedCourses.length>-1){
             for (let i=0; i<tempAddedCourses.length; i++){
@@ -71,7 +74,7 @@ export const StateTwo = (props) => {
                 }
             }
         }
-        props.setCourse(tempAddedCourses)
+       
     };
 
     //console.log(request_complete)
@@ -80,7 +83,7 @@ export const StateTwo = (props) => {
     return (    
     <>
         <List component={Stack} direction="row">
-            {props.addedCourses.map((currentCourse) => {
+            {copyOfAddedCourses.map((currentCourse) => {
                 return (
                     <ListItemButton onClick={() => {deleteCourse(currentCourse)}}>{currentCourse}</ListItemButton>)
             })}
