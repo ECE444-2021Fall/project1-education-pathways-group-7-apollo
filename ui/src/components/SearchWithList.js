@@ -40,6 +40,10 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
   // The actual array used for rendering
   const [addedCourses, setAddedCourses] = React.useState([]);
 
+  const setCourse = (currentCourse) => {
+    setAddedCourses(currentCourse)
+  }
+
   const fetchCourses = React.useCallback(async (query, year, campus, dept) => {
     if (year === "Any") {
       year = "";
@@ -88,7 +92,11 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <CoursePlanner />
+              <CoursePlanner 
+              addedCourses={addedCourses}
+              setCourse={setCourse}
+              userInfo={userInfo}
+              />
             </Grid>
             <Grid item xs={6}>
               <ProgressBar
