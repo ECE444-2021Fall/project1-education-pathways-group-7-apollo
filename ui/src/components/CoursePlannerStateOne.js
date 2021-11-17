@@ -5,10 +5,12 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateOne = (props) => {
+  //Users select term of choosing for course planner
   const categories = ['Fall', 'Winter', 'Summer']
 
   const [selectedOne, setSelectedOne] = useState('');
 
+  //Button will be highlighted to show it is selected
   const clickOne = (value) => {
     setSelectedOne(value)
     props.clickOne(value)

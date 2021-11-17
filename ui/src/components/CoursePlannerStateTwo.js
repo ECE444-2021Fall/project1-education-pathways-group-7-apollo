@@ -42,6 +42,7 @@ export const StateTwo = ({prev, setNewPrevCourse, addedCourses, setCourse, selec
     
     console.log("copyOfAddedCourses", copyOfAddedCourses)
 
+    //Adds new database entry if no previous entry, otherwise updates existing entry
     const savePlanner = () => {
         const email = userState["email"]
         const year = selectedZero
@@ -63,6 +64,7 @@ export const StateTwo = ({prev, setNewPrevCourse, addedCourses, setCourse, selec
         })
     };
 
+    //Deletes course of choosing from the user 
     const deleteCourse = (currentCourse) => {
         const tempAddedCourses = copyOfAddedCourses
 
@@ -94,6 +96,4 @@ export const StateTwo = ({prev, setNewPrevCourse, addedCourses, setCourse, selec
         <Button size="small" variant="text" disableElevation onClick={prev}>Back</Button>
         <Button size="small" variant="text" disableElevation onClick={() => {savePlanner()}}>Save</Button>
     </>)
-
-   // else return (<></>)
 };

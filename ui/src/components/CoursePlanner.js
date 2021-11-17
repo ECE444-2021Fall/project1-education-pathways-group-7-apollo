@@ -10,15 +10,20 @@ import CoursePlannerServices from "../services/CoursePlannerServices";
 import { useLocalStorage } from "../components/useLocalStorage";
 
 export function CoursePlanner({addedCourses, setCourse, userInfo}) {
+
+  //create State to move through course planner pages
   const [step, setStep] = useState(0);
 
+  //Selection states of buttons to see what user clicked
   const [selectedZero, setSelectedZero] = useState('');
 
   const [selectedOne, setSelectedOne] = useState('');
 
+
+  //Pass in previous saved courses from db into State two
   const [prevCourses, setPrevPlanner] = useState([]);
 
-
+  //Retrieve database entry if exists
   const prevPlanner = async () => {
     const email = userInfo["email"]
     const year = selectedZero
@@ -31,7 +36,6 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
         const courseLists = response.data
         if (courseLists.courses.length>-1){
             localStorage.setItem(`${year}${term}`, courseLists.courses)
-            // setPrevPlanner(courseLists.courses)
         }
       })
     .catch(err => {
@@ -39,6 +43,7 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
       })
   };
 
+  //Function to pass into next states for selection
   const clickZero = (value) => {
     setSelectedZero(value) 
    };  
@@ -47,6 +52,7 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
     setSelectedOne(value) 
    };  
 
+  //Functions to move into next or previous course planner states
   const nextStep = () => {
     if (step===1) {
       prevPlanner()
@@ -61,6 +67,7 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
     if (step !== 0) setStep((prev) => prev - 1);
   };
 
+  //Function to update addedCourses array within last state
   const setCourseTwo = (currentCourse) => {
     setCourse(currentCourse)
   };

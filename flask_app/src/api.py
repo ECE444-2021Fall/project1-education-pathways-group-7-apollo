@@ -432,7 +432,8 @@ def create_app():
         term = request_body['semester']
 
         dataDict = {"courses": None}
-        
+
+        #find if matching database entry exists
         matching_user = list(db['planner'].find({'email': email, 'year': year, 'term': term}))
 
         if matching_user: 

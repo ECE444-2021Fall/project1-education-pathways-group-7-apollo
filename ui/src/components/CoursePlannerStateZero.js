@@ -4,19 +4,16 @@ import { useState } from "react";
 import { styled } from '@mui/material/styles';
 
 export const StateZero = (props) => {
+  //Users select year of choosing for course planner
   const categories = ['2021/2022', '2022/2023', '2023/2024', '2024/2025']
 
   const [selectedZero, setSelectedZero] = useState('');
 
+  //Button will be highlighted to show it is selected
   const clickZero = (value) => {
     setSelectedZero(value) 
     props.clickZero(value)
    };  
-
-  /*const clickReset = () => {
-    const tempArray = []
-    props.setCourse(tempArray)
-  };*/
 
    return (
     <>
