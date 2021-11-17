@@ -9,10 +9,41 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
+import CoursePlannerServices from "../services/CoursePlannerServices";
 
 export const StateTwo = (props) => {
 
+    const email = props.UserState.email
+    const year = props.selectedZero
+    const term = props.selectedOne
+    const user = { "email": email, "year": year, "semester": term }
 
+    await CoursePlannerServices.getCoursePlannerByID(user)
+    .then(response => {
+        props.setCourse(courses) //is this right way to retrieve courses data from db?
+    })
+    .catch(err => {
+    console.error("Previous planner not found", err)
+    })
+
+    const savePlanner = () => {
+        const email = props.UserState.email
+        const year = props.selectedZero
+        const term = props.selectedOne
+        const user = { "email": email, "year": year, "semester": term }
+        const courseList = props.addedCourses
+
+        if (courseList){
+            const body = { "email": email, "year": year, "semester": term, "courses": courseList }
+            await createCoursePlanner(body)
+            .then(response => { 
+                console.log("Planner is saved!")
+            })
+            .catch(err => {
+                console.error("Planner not saved", err)
+            })
+        }
+    }
 
     const deleteCourse = (currentCourse) => {
 
@@ -25,7 +56,7 @@ export const StateTwo = (props) => {
                 }
             }
         }
-        props.deleteCourse(tempAddedCourses)
+        props.setCourse(tempAddedCourses)
     }
     return(
         <>
@@ -37,7 +68,7 @@ export const StateTwo = (props) => {
             </List>
             <p>Click on a course to delete!</p>
         <Button size="small" variant="text" disableElevation onClick={props.prev}>Back</Button>
-        <Button size="small" variant="text" disableElevation >Save</Button>
+        <Button size="small" variant="text" disableElevation onClick={() => {savePlanner()}}>Save</Button>
         </>
     )
     };

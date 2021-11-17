@@ -9,20 +9,16 @@ class CoursePlannerService {
         return axios.post(COURSEPLANNER_API_BASE_URL, user);
     }
 
-    getCoursePlannerByID(userId){
-        return axios.get(COURSEPLANNER_API_BASE_URL + '/' + userId);
+    getCoursePlannerByID(email){
+        return axios.get(COURSEPLANNER_API_BASE_URL, email);
     }
 
-    updateCoursePlanner(user, userId){
-        return axios.put(COURSEPLANNER_API_BASE_URL + '/' + userId, user);
+    updateCoursePlanner(user, email){
+        return axios.put(COURSEPLANNER_API_BASE_URL + '/' + email, user);
     }
 
-    deleteCoursePlanner(userId){
-        return axios.delete(COURSEPLANNER_API_BASE_URL + '/' + userId);
-    }
-
-    authenticateUser(payload){
-        return axios.post(API_BASE_URL + '/authenticate', payload)
+    deleteCoursePlanner(email){
+        return axios.delete(COURSEPLANNER_API_BASE_URL + '/' + email);
     }
 }
 

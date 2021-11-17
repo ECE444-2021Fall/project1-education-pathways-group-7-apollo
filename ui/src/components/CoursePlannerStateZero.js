@@ -6,19 +6,17 @@ import { styled } from '@mui/material/styles';
 export const StateZero = (props) => {
   const categories = ['2021/2022', '2022/2023', '2023/2024', '2024/2025']
 
-  const [selected, setSelected] = useState('');
+  const [selectedZero, setSelected] = useState('');
 
-  const Click = (value) => {
-    setSelected(value)
-    console.log(value)
+  const clickZero = (value) => {
+    setSelected(value) 
    };   
-
 
    return (
     <>
     <h3>Select a school year!</h3>
       {categories.map(category => {
-        return <Button onClick={()=>{Click(category)}} variant={selected === category ? 'contained':'outlined'}>{category}</Button>
+        return <Button onClick={()=>{clickZero(category)}} variant={selectedZero === category ? 'contained':'outlined'}>{category}</Button>
       })}
       <br></br>
       <br></br>
