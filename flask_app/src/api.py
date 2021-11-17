@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
-from flask_cors import CORS
-from flask import Flask, render_template, request, redirect, jsonify, json
+#from flask_cors import CORS
+from flask import Flask, send_from_directory, render_template, request, redirect, jsonify, json
 import certifi
 import os
 from pathlib import Path
@@ -21,8 +21,9 @@ def create_app():
     Main function to create flask app and load in information from course pickle
     or user MongoDB cluster
     """
-    app = Flask(__name__, instance_relative_config=True)
-    CORS(app)
+    #app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, static_url_path='', static_folder='../../ui/build')
+    #CORS(app)
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -36,6 +37,10 @@ def create_app():
     course_dir = CourseDirectory(course_dir_path)
     # Load program info
     program_dir = ProgramDirectory(course_dir)
+
+    @app.route("/", defaults={'path':''})
+    def index(path):
+        return send_from_directory(app.static_folder,'index.html')
 
     @app.route('/api/supported_search_headers')
     def retrieve_supported_search_headers():
