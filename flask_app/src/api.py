@@ -452,48 +452,42 @@ def create_app():
         request_body = request.get_json()
         email = request_body['email']
         year = request_body['year']
-        term = request_body['semester']
+        term = request_body['term']
+        courses = request_body['courses']
 
-        dataDict = {"courses": None}
-
-        matching_user = list(db['planner'].find({'email': email, 'year': year, 'term': term}))
-
-        # POST a data to database
-        if request.method == 'POST':
-            body = request.json
-            email = body['email'] 
-            year = body['year']
-            term = body['term']
-            courses = body['courses']
-            
-            if matching_user: 
-                db['planner'].insert_one({
-                "email": email,
-                "year": year,
-                "term": term,
-                "courses": courses
-                })
-                return jsonify({
-                    'status': 'Data is posted to MongoDB!',
-                    'email': email,
-                    'year': year,
-                    'term': term,
-                    'courses': courses
-                })
-            else: 
-                db['planner'].update_one({
-                "email": email,
-                "year": year,
-                "term": term,
-                "courses": courses
-                })
-                return jsonify({
-                    'status': 'Data is posted to MongoDB!',
-                    'email': email,
-                    'year': year,
-                    'term': term,
-                    'courses': courses
-                })
+        matching_user = list(db['planner'].find({'email': email, 'year': year, 'term': term}))      
+        
+        # If user does not exists, insert into DB
+        if not matching_user: 
+            db['planner'].insert_one({
+            "email": email,
+            "year": year,
+            "term": term,
+            "courses": courses
+            })
+            return jsonify({
+                'status': 'Data is posted to MongoDB!',
+                'email': email,
+                'year': year,
+                'term': term,
+                'courses': courses
+            })
+        # If user exists, update it
+        else: 
+            db['planner'].update_one({
+            "email": email,
+            "year": year,
+            "term": term
+            }, {
+            "$set": {"courses": courses}
+            })
+            return jsonify({
+                'status': 'Data is posted to MongoDB!',
+                'email': email,
+                'year': year,
+                'term': term,
+                'courses': courses
+            })
     return app
 
 # Open files

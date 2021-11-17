@@ -16,25 +16,24 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
 
   const [selectedOne, setSelectedOne] = useState('');
 
+  const [prevCourses, setPrevPlanner] = useState([]);
+
 
   const prevPlanner = async () => {
     const email = userInfo["email"]
     const year = selectedZero
     const term = selectedOne
     const user = { "email": email, "year": year, "semester": term }
-
-    //const [request_complete, setRequest] = useState(false);
   
     await CoursePlannerServices.getCoursePlannerByID(user)
     .then(response => {
-        ///console.log("HELLO HELLO HELLO", response.data)
-            //setRequest(true)
+
         const courseLists = response.data
         if (courseLists.courses.length>-1){
             localStorage.setItem(`${year}${term}`, courseLists.courses)
+            // setPrevPlanner(courseLists.courses)
         }
-        //console.log(props.addedCourses)
-        })
+      })
     .catch(err => {
         console.error("Previous planner not found", err)
       })
@@ -66,13 +65,17 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
     setCourse(currentCourse)
   };
 
+  const setNewPrevCourse = (newPrevCourse) => {
+    setPrevPlanner(newPrevCourse)
+  };
+
   return (
     <div>
       <Box>
         <h1>Course Planner</h1>
         {step === 0 ? <StateZero next={nextStep} clickZero={clickZero} addedCourses={addedCourses} setCourse={setCourseTwo}/> : null}
         {step === 1 ? <StateOne next={nextStep} prev={prevStep} clickOne={clickOne}/> : null}
-        {step === 2 ? <StateTwo prev={prevStep} addedCourses={addedCourses} setCourse={setCourseTwo} selectedZero={selectedZero} selectedOne = {selectedOne} userState={userInfo}/> : null} 
+        {step === 2 ? <StateTwo prev={prevStep} setNewPrevCourse={setNewPrevCourse} addedCourses={addedCourses} setCourse={setCourseTwo} selectedZero={selectedZero} selectedOne = {selectedOne} userState={userInfo} prevCourses={prevCourses}/> : null} 
       </Box>
     </div>
   );

@@ -10,24 +10,42 @@ import Divider from '@mui/material/Divider';
 import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import CoursePlannerServices from "../services/CoursePlannerServices";
+import { Card } from '@mui/material';
 
-export const StateTwo = (props) => {
-    // Copy the addedcourses array. We'll modify this copy until the user decides to save
+export const StateTwo = ({prev, setNewPrevCourse, addedCourses, setCourse, selectedZero, selectedOne, userState, prevCourses}) => {
+    // Grab the user's prior saved courses
+    let prevPlanCourses = []
+    if (localStorage.getItem(`${selectedZero}${selectedOne}`)) {
+        prevPlanCourses = localStorage.getItem(`${selectedZero}${selectedOne}`).split(',')
+    }
     
-    const [copyOfAddedCourses, setcopyofAddedCourses] = useState([...props.addedCourses]);
-    //}
-    console.log("COMPONENT RERENDERING", [...props.addedCourses], copyOfAddedCourses)
 
-    useEffect(() => { setcopyofAddedCourses([...props.addedCourses])}, [])
+    // Create a state for copying added courses so we don't modify prop every single time we delete course
+    const [copyOfAddedCourses, setCopyofAddedCourses] = useState([])
 
-    //useEffect(() => {
-      //  prevPlanner();
-      //}, [])
+    // Whenever addedCourses props changes, update copyOfAddedCourses as well
+    useEffect(() => {
+        let unique = []
+        addedCourses.forEach((course) => {
+            if (!prevPlanCourses.includes(course)) {
+                unique.push(course)
+            }
+        })
+        prevPlanCourses.forEach((course) => {
+            if (!unique.includes(course)) {
+                unique.push(course)
+            }
+        })
+        setCopyofAddedCourses([...unique])
+    }, [JSON.stringify(addedCourses)]) // JSON.stringify courses prevents dependency from being an array, which has different memory each time
+
+    
+    console.log("copyOfAddedCourses", copyOfAddedCourses)
 
     const savePlanner = () => {
-        const email = props.userState["email"]
-        const year = props.selectedZero
-        const term = props.selectedOne
+        const email = userState["email"]
+        const year = selectedZero
+        const term = selectedOne
         const courseList = copyOfAddedCourses
 
         const body = { email: email, year: year, term: term, courses: courseList }
@@ -36,8 +54,9 @@ export const StateTwo = (props) => {
 
         CoursePlannerServices.saveCoursePlanner(body)
         .then(response => { 
-            console.log("Planner is saved!", response)
-            props.setCourse(copyOfAddedCourses)
+            console.log("Planner is saved!")
+            localStorage.removeItem(`${selectedZero}${selectedOne}`)
+            setCourse(copyOfAddedCourses)
         })
         .catch(err => {
             console.error("Planner not saved", err)
@@ -45,34 +64,34 @@ export const StateTwo = (props) => {
     };
 
     const deleteCourse = (currentCourse) => {
-
         const tempAddedCourses = copyOfAddedCourses
 
         if (tempAddedCourses.length>-1){
             for (let i=0; i<tempAddedCourses.length; i++){
                 if (tempAddedCourses[i]===currentCourse){
+
                     tempAddedCourses.splice(i, 1);
                 }
             }
         }
-        
-        setcopyofAddedCourses(tempAddedCourses)
-       
+        savePlanner()
     };
 
-    //console.log(request_complete)
-    
-    //if (request_complete) {
+    const coursesToDisplay = copyOfAddedCourses.map((currentCourse) => {
+        return (
+            <ListItemButton autoFocus={true} onClick={() => {deleteCourse(currentCourse)}}>{currentCourse}</ListItemButton>
+            )
+        })
+
     return (    
     <>
         <List component={Stack} direction="row">
-            {copyOfAddedCourses.map((currentCourse) => {
-                return (
-                    <ListItemButton onClick={() => {deleteCourse(currentCourse)}}>{currentCourse}</ListItemButton>)
-            })}
+        <Card variant="outlined" style={{width: "20vw", backgroundColor: "#f7f6f6", paddingLeft: "10px", borderRadius: "10px"}}>
+            {coursesToDisplay}
+        </Card>
         </List>
         <p>Click on a course to delete!</p>
-        <Button size="small" variant="text" disableElevation onClick={props.prev}>Back</Button>
+        <Button size="small" variant="text" disableElevation onClick={prev}>Back</Button>
         <Button size="small" variant="text" disableElevation onClick={() => {savePlanner()}}>Save</Button>
     </>)
 
