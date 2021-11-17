@@ -6,11 +6,12 @@ import { styled } from '@mui/material/styles';
 export const StateZero = (props) => {
   const categories = ['2021/2022', '2022/2023', '2023/2024', '2024/2025']
 
-  const [selectedZero, setSelected] = useState('');
+  const [selectedZero, setSelectedZero] = useState('');
 
   const clickZero = (value) => {
-    setSelected(value) 
-   };   
+    setSelectedZero(value) 
+    props.clickZero(value)
+   };  
 
    return (
     <>

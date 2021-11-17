@@ -406,6 +406,7 @@ def create_app():
             minor = data['minor']
             year = data['year']
             coursesTaken = data['coursesTaken']
+            email = data['email']
             dataDict = {
                     'id': str(id),
                     "firstName": firstName,
@@ -413,60 +414,62 @@ def create_app():
                     "major": major,
                     "minor": minor,
                     "year": year,
-                    "coursesTaken": coursesTaken
+                    "coursesTaken": coursesTaken,
+                    "email": email
                 }
 
         response = jsonify(dataDict)
         return response
 
-    @app.route('/api/courseplanner', methods=['POST', 'GET'])
+    @app.route('/api/courseplanner', methods=['POST'])
     def courseplanner():
+        db = client['user_management'] 
+
+        request_body = request.get_json()
+
+        email = request_body['email']
+        year = request_body['year']
+        term = request_body['semester']
+
+        dataDict = {"courses": None}
+        
+        matching_user = list(db['planner'].find({'email': email, 'schoolYear': year, 'term': term}))
+
+        if matching_user: 
+            data = matching_user[0]
+            courses = data['courses']
+            dataDict = {
+                    "courses": courses
+                }
+
+        response = jsonify(dataDict)
+        return response
+    
+    @app.route('/api/saveplanner', methods=['POST'])
+    def saveplanner():
         db = client['user_management']
 
-            # POST a data to database
+        # POST a data to database
         if request.method == 'POST':
             body = request.json
-            email = body['email']
-            schoolYear = body['school_year']
+            email = body['email'] 
+            year = body['year']
             term = body['term']
-            courses = body['courses'] 
-            # db.users.insert_one({
+            courses = body['courses']
+
             db['planner'].insert_one({
-                "email": email,
-                "schoolYear": schoolYear,
-                "term": term,
-                "courses": courses,
+            "email": email,
+            "year": year,
+            "term": term,
+            "courses": courses
             })
             return jsonify({
                 'status': 'Data is posted to MongoDB!',
-                "email": email,
-                "schoolYear": schoolYear,
-                "term": term,
-                "courses": courses,
+                'email': email,
+                'year': year,
+                'term': term,
+                'courses': courses
             })
-        
-        # GET all data from database
-        if request.method == 'GET':
-            allData = db['planner'].find()
-            dataJson = []
-            for data in allData:
-                id = data['_id']
-                firstName = data['firstName']
-                lastName = data['lastName']
-                schoolYear = data['school_year']
-                term = data['term']
-                courses = data['courses'] 
-                dataDict = {
-                    'id': str(id),
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "schoolYear": schoolYear,
-                    "term": term,
-                    "courses": courses,
-                }
-                dataJson.append(dataDict)
-            print(dataJson)
-            return jsonify(dataJson)
 
     return app
 

@@ -7,43 +7,58 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import CoursePlannerServices from "../services/CoursePlannerServices";
 
 export const StateTwo = (props) => {
 
-    const email = props.UserState.email
+    const email = props.userState["email"]
     const year = props.selectedZero
     const term = props.selectedOne
     const user = { "email": email, "year": year, "semester": term }
 
-    await CoursePlannerServices.getCoursePlannerByID(user)
+    //const [request_complete, setRequest] = useState(false);
+
+    //const prevPlanner = (user) => {
+    CoursePlannerServices.getCoursePlannerByID(user)
     .then(response => {
-        props.setCourse(courses) //is this right way to retrieve courses data from db?
-    })
+        //console.log("HELLO HELLO HELLO", response.data)
+            //setRequest(true)
+        const courseList = response.data
+        if (courseList.courses.length>-1){
+            props.setCourse(courseList.courses)
+        }
+        //console.log(props.addedCourses)
+        })
     .catch(err => {
-    console.error("Previous planner not found", err)
+        console.error("Previous planner not found", err)
     })
+
+    //}
+
+    //useEffect(() => {
+      //  prevPlanner();
+      //}, [])
 
     const savePlanner = () => {
-        const email = props.UserState.email
+        const email = props.userState["email"]
         const year = props.selectedZero
         const term = props.selectedOne
-        const user = { "email": email, "year": year, "semester": term }
         const courseList = props.addedCourses
 
-        if (courseList){
-            const body = { "email": email, "year": year, "semester": term, "courses": courseList }
-            await createCoursePlanner(body)
-            .then(response => { 
-                console.log("Planner is saved!")
-            })
-            .catch(err => {
-                console.error("Planner not saved", err)
-            })
+        const body = { email: email, year: year, term: term, courses: courseList }
+
+        console.log(body)
+
+        CoursePlannerServices.saveCoursePlanner(body)
+        .then(response => { 
+            console.log("Planner is saved!")
+        })
+        .catch(err => {
+            console.error("Planner not saved", err)
+        })
         }
-    }
 
     const deleteCourse = (currentCourse) => {
 
@@ -58,17 +73,22 @@ export const StateTwo = (props) => {
         }
         props.setCourse(tempAddedCourses)
     }
-    return(
-        <>
-            <List component={Stack} direction="row">
-                {props.addedCourses.map((currentCourse) => {
-                    return (
-                        <ListItemButton onClick={() => {deleteCourse(currentCourse)}}>{currentCourse}</ListItemButton>)
-                })}
-            </List>
-            <p>Click on a course to delete!</p>
+
+    //console.log(request_complete)
+    
+    //if (request_complete) {
+    return (    
+    <>
+        <List component={Stack} direction="row">
+            {props.addedCourses.map((currentCourse) => {
+                return (
+                    <ListItemButton onClick={() => {deleteCourse(currentCourse)}}>{currentCourse}</ListItemButton>)
+            })}
+        </List>
+        <p>Click on a course to delete!</p>
         <Button size="small" variant="text" disableElevation onClick={props.prev}>Back</Button>
         <Button size="small" variant="text" disableElevation onClick={() => {savePlanner()}}>Save</Button>
-        </>
-    )
-    };
+    </>)
+
+   // else return (<></>)
+};

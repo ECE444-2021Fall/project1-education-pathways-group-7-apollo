@@ -95,6 +95,7 @@ const SearchAndCourse = ({ userInfo, majorCourses, minorsRequirements }) => {
               <CoursePlanner 
               addedCourses={addedCourses}
               setCourse={setCourse}
+              userInfo={userInfo}
               />
             </Grid>
             <Grid item xs={6}>
