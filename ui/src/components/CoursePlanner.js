@@ -34,10 +34,6 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
     setCourse(currentCourse)
   };
 
-  const setCourseTwo = (currentCourse) => {
-    setCourse(currentCourse)
-  };
-
   return (
     <div>
       <Box>
