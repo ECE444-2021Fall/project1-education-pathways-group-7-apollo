@@ -433,7 +433,7 @@ def create_app():
 
         dataDict = {"courses": None}
         
-        matching_user = list(db['planner'].find({'email': email, 'schoolYear': year, 'term': term}))
+        matching_user = list(db['planner'].find({'email': email, 'year': year, 'term': term}))
 
         if matching_user: 
             data = matching_user[0]
@@ -449,6 +449,15 @@ def create_app():
     def saveplanner():
         db = client['user_management']
 
+        request_body = request.get_json()
+        email = request_body['email']
+        year = request_body['year']
+        term = request_body['semester']
+
+        dataDict = {"courses": None}
+
+        matching_user = list(db['planner'].find({'email': email, 'year': year, 'term': term}))
+
         # POST a data to database
         if request.method == 'POST':
             body = request.json
@@ -456,21 +465,35 @@ def create_app():
             year = body['year']
             term = body['term']
             courses = body['courses']
-
-            db['planner'].insert_one({
-            "email": email,
-            "year": year,
-            "term": term,
-            "courses": courses
-            })
-            return jsonify({
-                'status': 'Data is posted to MongoDB!',
-                'email': email,
-                'year': year,
-                'term': term,
-                'courses': courses
-            })
-
+            
+            if matching_user: 
+                db['planner'].insert_one({
+                "email": email,
+                "year": year,
+                "term": term,
+                "courses": courses
+                })
+                return jsonify({
+                    'status': 'Data is posted to MongoDB!',
+                    'email': email,
+                    'year': year,
+                    'term': term,
+                    'courses': courses
+                })
+            else: 
+                db['planner'].update_one({
+                "email": email,
+                "year": year,
+                "term": term,
+                "courses": courses
+                })
+                return jsonify({
+                    'status': 'Data is posted to MongoDB!',
+                    'email': email,
+                    'year': year,
+                    'term': term,
+                    'courses': courses
+                })
     return app
 
 # Open files

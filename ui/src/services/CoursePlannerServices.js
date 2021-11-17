@@ -9,16 +9,16 @@ class CoursePlannerService {
         return axios.post(COURSEPLANNER_API_BASE_URL, user);
     }
 
-    getCoursePlannerByID(email){
-        return axios.post(COURSEPLANNER_API_BASE_URL, email);
+    getCoursePlannerByID(user){
+        return axios.post(COURSEPLANNER_API_BASE_URL, user);
     }
 
-    updateCoursePlanner(email){
-        return axios.put(COURSEPLANNER_API_BASE_URL, email);
+    updateCoursePlanner(user){
+        return axios.put(COURSEPLANNER_API_BASE_URL, user);
     }
 
-    deleteCoursePlanner(email){
-        return axios.delete(COURSEPLANNER_API_BASE_URL, email);
+    deleteCoursePlanner(user){
+        return axios.delete(COURSEPLANNER_API_BASE_URL, user);
     }
 
     saveCoursePlanner(email){

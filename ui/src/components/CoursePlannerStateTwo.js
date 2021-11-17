@@ -23,11 +23,11 @@ export const StateTwo = (props) => {
     //const prevPlanner = (user) => {
     CoursePlannerServices.getCoursePlannerByID(user)
     .then(response => {
-        //console.log("HELLO HELLO HELLO", response.data)
+       ///console.log("HELLO HELLO HELLO", response.data)
             //setRequest(true)
-        const courseList = response.data
-        if (courseList.courses.length>-1){
-            props.setCourse(courseList.courses)
+        const courseLists = response.data
+        if (courseLists.courses.length>-1){
+            props.setCourse(courseLists.courses)
         }
         //console.log(props.addedCourses)
         })
@@ -53,12 +53,12 @@ export const StateTwo = (props) => {
 
         CoursePlannerServices.saveCoursePlanner(body)
         .then(response => { 
-            console.log("Planner is saved!")
+            console.log("Planner is saved!", response)
         })
         .catch(err => {
             console.error("Planner not saved", err)
         })
-        }
+    };
 
     const deleteCourse = (currentCourse) => {
 
@@ -72,7 +72,7 @@ export const StateTwo = (props) => {
             }
         }
         props.setCourse(tempAddedCourses)
-    }
+    };
 
     //console.log(request_complete)
     

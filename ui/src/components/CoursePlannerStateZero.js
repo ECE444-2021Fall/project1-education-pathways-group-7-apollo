@@ -13,6 +13,11 @@ export const StateZero = (props) => {
     props.clickZero(value)
    };  
 
+  /*const clickReset = () => {
+    const tempArray = []
+    props.setCourse(tempArray)
+  };*/
+
    return (
     <>
     <h3>Select a school year!</h3>

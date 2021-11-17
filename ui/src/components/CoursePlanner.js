@@ -32,13 +32,17 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
 
   const setCourseTwo = (currentCourse) => {
     setCourse(currentCourse)
-  }
+  };
+
+  const setCourseTwo = (currentCourse) => {
+    setCourse(currentCourse)
+  };
 
   return (
     <div>
       <Box>
         <h1>Course Planner</h1>
-        {step === 0 ? <StateZero next={nextStep} clickZero={clickZero}/> : null}
+        {step === 0 ? <StateZero next={nextStep} clickZero={clickZero} addedCourses={addedCourses} setCourse={setCourseTwo}/> : null}
         {step === 1 ? <StateOne next={nextStep} prev={prevStep} clickOne={clickOne}/> : null}
         {step === 2 ? <StateTwo prev={prevStep} addedCourses={addedCourses} setCourse={setCourseTwo} selectedZero={selectedZero} selectedOne = {selectedOne} userState={userInfo}/> : null} 
       </Box>
