@@ -66,7 +66,7 @@ export function CoursePlanner({addedCourses, setCourse, userInfo}) {
   const prevStep = () => {
     if (step !== 0) setStep((prev) => prev - 1);
   };
-
+  
   //Function to update addedCourses array within last state
   const setCourseTwo = (currentCourse) => {
     setCourse(currentCourse)

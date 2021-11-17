@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
+import Tooltip from "@mui/material/Tooltip";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -129,17 +130,18 @@ export default function PersistentDrawerLeft(props) {
         open={open}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
-          >
-            <SearchIcon />
-          </IconButton>
-          {/* Add a logout button here */}
-          <div style={{"marginLeft": 'auto'}}>
+          <Tooltip title="Search">
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: "none" }) }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Tooltip>
+          <div style={{ marginLeft: "auto" }}>
             <Logout />
           </div>
         </Toolbar>
@@ -161,7 +163,6 @@ export default function PersistentDrawerLeft(props) {
           <header
             style={{
               position: "relative",
-              fontFamily: "Bodoni Moda",
               fontWeight: "bold",
               width: "25vw",
               alignSelf: "left",
@@ -184,7 +185,7 @@ export default function PersistentDrawerLeft(props) {
             <SearchBar setSearchInput={setSearchInput} />
           </ListItem>
           <ListItem>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl variant="standard" sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Year
               </InputLabel>
@@ -206,7 +207,7 @@ export default function PersistentDrawerLeft(props) {
             </FormControl>
           </ListItem>
           <ListItem>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl variant="standard" sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Campus
               </InputLabel>
@@ -228,7 +229,7 @@ export default function PersistentDrawerLeft(props) {
             </FormControl>
           </ListItem>
           <ListItem>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <FormControl variant="standard" sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Division or Department
               </InputLabel>
@@ -252,7 +253,6 @@ export default function PersistentDrawerLeft(props) {
         </List>
         <Button
           style={{
-            fontFamily: "Bodoni Moda",
             borderRadius: 5,
             width: "15vw",
             alignSelf: "center",
@@ -268,7 +268,10 @@ export default function PersistentDrawerLeft(props) {
           variant="contained"
           type="submit"
           className="btn btn-lg btn-primary btn-block"
-          onClick={() => fetchCourses(searchInput, year, campus, dept)}
+          onClick={() => {
+            fetchCourses(searchInput, year, campus, dept);
+            handleDrawerClose();
+          }}
         >
           Search!
         </Button>
